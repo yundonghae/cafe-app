@@ -1,0 +1,493 @@
+/* ============================================
+   🌊 카페 앱 - 전역 CSS 변수 & 리셋
+   테마: 동해 바다 — 딥오션 네이비 · 코발트 · 청록 · 파도 거품
+   모든 페이지 CSS는 여기 정의된 변수만 사용한다.
+   ============================================ */
+
+:root {
+  /* --- 바다 팔레트 (깊은 곳 → 얕은 곳) --- */
+  --sea-abyss: #04182b;      /* 심해 (가장 진한 텍스트) */
+  --sea-navy: #0a2540;       /* 딥오션 네이비 */
+  --sea-cobalt: #12508f;     /* 코발트 블루 */
+  --sea-teal: #1a8a9c;       /* 청록 */
+  --sea-aqua: #4fc3d9;       /* 밝은 물빛 */
+  --sea-sky: #a8e0ec;        /* 밝은 하늘색 (얕은 수면) */
+  --sea-mist: #e4f4f8;       /* 물안개 (밝은 배경) */
+
+  /* --- 포인트 --- */
+  --foam: #ffffff;           /* 파도 흰 거품 */
+  --foam-soft: #f4fbfd;      /* 옅은 거품 */
+  --sand: #e8d8bd;           /* 모래빛 베이지 */
+  --sand-deep: #c9ae86;      /* 젖은 모래 */
+
+  /* --- 시맨틱 컬러 --- */
+  --color-primary: var(--sea-cobalt);
+  --color-primary-hover: var(--sea-navy);
+  --color-accent: var(--sea-teal);
+  --color-accent-light: var(--sea-aqua);
+  --color-bg: var(--sea-mist);
+  --color-surface: var(--foam);
+  --color-text: var(--sea-abyss);
+  --color-text-muted: #5b7386;
+  --color-border: #cfe6ee;
+
+  /* --- 상태 컬러 --- */
+  --color-success: #2a9d6f;   /* 해조 그린 */
+  --color-warning: #dfa03a;   /* 모래 노랑 */
+  --color-danger: #d1543f;    /* 산호 레드 */
+  --color-info: var(--sea-cobalt);
+
+  /* --- 그라데이션 (수면 느낌) --- */
+  --grad-ocean: linear-gradient(160deg, var(--sea-navy), var(--sea-cobalt) 55%, var(--sea-teal));
+  --grad-surface: linear-gradient(180deg, var(--sea-aqua), var(--sea-sky));
+  --grad-wave: linear-gradient(90deg, var(--sea-teal), var(--sea-aqua), var(--sea-sky));
+
+  /* --- 글래스모피즘 (물결/물방울 질감) --- */
+  --glass-bg: rgba(255, 255, 255, 0.5);
+  --glass-bg-deep: rgba(10, 37, 64, 0.42);  /* 어두운 배경 위 유리 */
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-blur: 14px;
+
+  /* --- 그림자 (수중 그림자는 푸르게) --- */
+  --shadow-sm: 0 1px 3px rgba(10, 37, 64, 0.08);
+  --shadow-md: 0 4px 16px rgba(10, 37, 64, 0.12);
+  --shadow-lg: 0 12px 32px rgba(10, 37, 64, 0.18);
+  --glow-aqua: 0 0 18px rgba(79, 195, 217, 0.45);
+
+  /* --- 라운드 (물방울처럼 둥글게) --- */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-full: 999px;
+
+  /* --- 간격 --- */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+
+  /* --- 타이포 --- */
+  --font-sans: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: 1.5rem;
+  --fs-2xl: 2rem;
+  --fs-3xl: 2.75rem;
+
+  /* --- 레이아웃 --- */
+  --container-max: 1120px;
+  --header-height: 64px;
+
+  /* --- 트랜지션 --- */
+  --transition: 0.2s ease;
+  --transition-slow: 0.35s ease;
+
+  /* --- z-index --- */
+  --z-header: 100;
+  --z-overlay: 500;
+  --z-modal: 600;
+  --z-toast: 700;
+}
+
+/* ============================================
+   리셋
+   ============================================ */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-md);
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-bg);
+  /* 수면 위 빛이 스며드는 느낌 — 옅은 청록/하늘색 방사형 그라데이션 */
+  background-image:
+    radial-gradient(circle at 12% 10%, rgba(79, 195, 217, 0.18), transparent 45%),
+    radial-gradient(circle at 88% 0%, rgba(168, 224, 236, 0.5), transparent 50%),
+    radial-gradient(circle at 50% 115%, rgba(26, 138, 156, 0.12), transparent 55%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.25;
+  font-weight: 700;
+  color: var(--sea-navy);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--sea-sky);
+  color: var(--sea-abyss);
+}
+
+/* ============================================
+   공통 유틸리티 클래스
+   ============================================ */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--space-md);
+}
+
+/* 물방울 유리 질감 */
+.glass {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+}
+
+/* 어두운 바다 배경 위에 얹는 유리 */
+.glass--deep {
+  background: var(--glass-bg-deep);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: var(--foam);
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* 버튼 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  transition: background var(--transition), transform var(--transition),
+    box-shadow var(--transition), color var(--transition),
+    border-color var(--transition);
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn--primary {
+  background: var(--grad-ocean);
+  color: var(--foam);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn--primary:hover {
+  box-shadow: var(--shadow-md), var(--glow-aqua);
+}
+
+.btn--outline {
+  border: 1.5px solid var(--color-border);
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.btn--outline:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.btn--ghost {
+  color: var(--color-text-muted);
+}
+
+.btn--ghost:hover {
+  color: var(--color-text);
+  background: var(--foam-soft);
+}
+
+.btn--danger {
+  background: var(--color-danger);
+  color: var(--foam);
+}
+
+.btn--block { width: 100%; }
+
+.btn--sm {
+  padding: 0.4rem 0.85rem;
+  font-size: var(--fs-xs);
+}
+
+.btn--lg {
+  padding: 0.85rem 1.75rem;
+  font-size: var(--fs-md);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 뱃지 */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  background: var(--sea-mist);
+  color: var(--sea-cobalt);
+}
+
+.badge--sand {
+  background: var(--sand);
+  color: #6b5533;
+}
+
+/* 상태 칩 (주문 상태 — utils.js 의 ORDER_STATUS 와 연동) */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.22rem 0.65rem;
+  border-radius: var(--radius-full);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+
+.chip::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.chip--warning { color: var(--color-warning); background: rgba(223, 160, 58, 0.14); }
+.chip--info    { color: var(--color-info);    background: rgba(18, 80, 143, 0.12); }
+.chip--success { color: var(--color-success); background: rgba(42, 157, 111, 0.14); }
+.chip--danger  { color: var(--color-danger);  background: rgba(209, 84, 63, 0.14); }
+
+/* 입력 필드 */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.field label {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.7;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(26, 138, 156, 0.15);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 96px;
+}
+
+/* 수량 스텝퍼 (utils.js 의 qtyStepperHtml 과 연동) */
+.qty-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 0.15rem 0.35rem;
+  background: var(--color-surface);
+}
+
+.qty-stepper__btn {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  color: var(--sea-cobalt);
+  font-weight: 700;
+  line-height: 1;
+  transition: background var(--transition);
+}
+
+.qty-stepper__btn:hover { background: var(--sea-mist); }
+
+.qty-stepper__value {
+  min-width: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 헬퍼 */
+.text-muted { color: var(--color-text-muted); }
+.text-accent { color: var(--color-accent); }
+.text-center { text-align: center; }
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 빈 상태 */
+.empty-state {
+  text-align: center;
+  padding: var(--space-2xl) var(--space-md);
+  color: var(--color-text-muted);
+}
+
+.empty-state__icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-md);
+  opacity: 0.6;
+}
+
+/* 스켈레톤 / 로딩 (물결이 흐르는 듯한 shimmer) */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--sea-mist) 25%,
+    var(--foam) 50%,
+    var(--sea-mist) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: var(--radius-md);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ============================================
+   토스트 (utils.js 의 showToast 와 연동)
+   ============================================ */
+
+.toast-container {
+  position: fixed;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  z-index: var(--z-toast);
+  pointer-events: none;
+}
+
+.toast {
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-full);
+  background: var(--sea-navy);
+  color: var(--foam);
+  box-shadow: var(--shadow-lg);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  animation: toast-in 0.25s ease;
+}
+
+.toast--success { background: var(--color-success); }
+.toast--danger  { background: var(--color-danger); }
+.toast--warning { background: var(--color-warning); }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
