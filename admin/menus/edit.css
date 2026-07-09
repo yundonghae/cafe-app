@@ -1,0 +1,259 @@
+/* ============================================
+   🌊 관리자 - 메뉴 수정 (edit.html)
+   create.html 과 같은 폼 레이아웃을 쓰되,
+   코로케이션 원칙에 따라 이 페이지 전용으로 따로 둔다.
+   색상·간격·타이포는 모두 variables.css 의 변수만 사용한다.
+   ============================================ */
+
+/* --- 상단 관리자 헤더 (심해 그라데이션) --- */
+.admin-top {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  background: var(--grad-ocean);
+  color: var(--foam);
+  box-shadow: var(--shadow-md);
+}
+
+.admin-top__inner {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.admin-top__brand {
+  font-weight: 700;
+  font-size: var(--fs-lg);
+  color: var(--foam);
+}
+
+.admin-top__brand span {
+  margin-left: var(--space-xs);
+  padding: 0.1rem 0.5rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg-deep);
+  font-size: var(--fs-xs);
+  vertical-align: middle;
+}
+
+.admin-top__nav {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.admin-top__nav .btn {
+  color: var(--foam);
+}
+
+.admin-top__nav .btn--ghost:hover {
+  background: var(--glass-bg-deep);
+  color: var(--foam);
+}
+
+.admin-top__nav .btn--outline {
+  background: var(--glass-bg-deep);
+  border-color: var(--glass-border);
+}
+
+.admin-top__nav .btn--outline:hover {
+  color: var(--sea-sky);
+  border-color: var(--sea-sky);
+}
+
+/* --- 페이지 제목 --- */
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin: var(--space-xl) 0 var(--space-lg);
+}
+
+.breadcrumb {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--color-accent);
+  letter-spacing: 0.02em;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.page-head__title {
+  font-size: var(--fs-2xl);
+  margin-top: var(--space-xs);
+}
+
+.page-head__sub {
+  margin-top: var(--space-xs);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+/* --- 폼 + 미리보기 2단 레이아웃 --- */
+.form-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: var(--space-xl);
+  align-items: start;
+  padding-bottom: var(--space-2xl);
+}
+
+/* 메뉴를 못 찾으면 폼 자체를 숨긴다 */
+.form-layout[hidden] {
+  display: none;
+}
+
+/* 입력 폼 (.card 재사용) */
+.form-card {
+  padding: var(--space-lg);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md);
+}
+
+/* 한 줄 전체를 차지하는 항목 */
+.form-grid__full {
+  grid-column: 1 / -1;
+}
+
+/* select 는 .input 스타일을 물려받되 화살표 여백만 확보 */
+.select {
+  appearance: none;
+  padding-right: var(--space-xl);
+  cursor: pointer;
+}
+
+/* 유효성 오류 메시지 — 내용이 없으면 자리를 차지하지 않는다 */
+.field__error {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--color-danger);
+}
+
+.field__error:empty {
+  display: none;
+}
+
+/* 오류가 난 입력칸은 산호빛 테두리로 표시 */
+.input--invalid {
+  border-color: var(--color-danger);
+}
+
+.input--invalid:focus {
+  box-shadow: none;
+  border-color: var(--color-danger);
+}
+
+/* 체크박스 줄 */
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.check input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+/* 액션 버튼 줄 */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+}
+
+/* --- 실시간 미리보기 --- */
+.preview-card {
+  padding: var(--space-lg);
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-lg));
+}
+
+.preview-card__title {
+  font-size: var(--fs-md);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+}
+
+.preview {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.preview__thumb {
+  aspect-ratio: 16 / 10;
+  background: var(--grad-surface); /* 이미지가 없으면 수면 배경 */
+}
+
+.preview__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.preview__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+}
+
+.preview__name {
+  font-size: var(--fs-lg);
+  word-break: break-word;
+}
+
+.preview__price {
+  color: var(--sea-cobalt);
+  font-variant-numeric: tabular-nums;
+}
+
+.preview__desc {
+  font-size: var(--fs-sm);
+  word-break: break-word;
+}
+
+.preview-card__hint {
+  margin-top: var(--space-md);
+  font-size: var(--fs-xs);
+}
+
+/* --- 반응형 --- */
+@media (max-width: 900px) {
+  .form-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-card {
+    position: static;
+  }
+}
+
+@media (max-width: 560px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions .btn {
+    flex: 1;
+  }
+}

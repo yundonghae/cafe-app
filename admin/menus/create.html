@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>메뉴 추가 · 동해 카페 관리자</title>
+
+    <link rel="stylesheet" href="../../css/variables.css" />
+    <link rel="stylesheet" href="./create.css" />
+
+    <script defer src="../../js/data.js"></script>
+    <script defer src="../../js/utils.js"></script>
+    <script defer src="./create.js"></script>
+  </head>
+  <body>
+    <header class="admin-top">
+      <div class="container admin-top__inner">
+        <a class="admin-top__brand" href="./list.html">
+          🌊 동해 카페 <span>관리자</span>
+        </a>
+        <nav class="admin-top__nav">
+          <a class="btn btn--ghost" href="./list.html">메뉴 관리</a>
+          <a class="btn btn--outline" href="./create.html" aria-current="page">＋ 메뉴 추가</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="page-head">
+        <div>
+          <p class="breadcrumb">
+            <a href="./list.html">관리자 · 메뉴 관리</a> · 추가
+          </p>
+          <h1 class="page-head__title">새 메뉴 띄우기</h1>
+          <p class="page-head__sub">
+            새로운 한 잔을 파도 위에 올립니다. ＊ 표시는 필수 항목입니다.
+          </p>
+        </div>
+        <a class="btn btn--outline" href="./list.html">← 목록으로</a>
+      </div>
+
+      <form class="form-layout" id="menu-form" novalidate>
+        <!-- 입력 폼 (.card 재사용) -->
+        <section class="card form-card">
+          <div class="form-grid">
+            <!-- 메뉴 이름 -->
+            <div class="field form-grid__full">
+              <label for="name">메뉴 이름 ＊</label>
+              <input
+                class="input"
+                id="name"
+                name="name"
+                type="text"
+                maxlength="40"
+                placeholder="예: 블루오션 에이드"
+                autocomplete="off"
+              />
+              <p class="field__error" data-error="name"></p>
+            </div>
+
+            <!-- 카테고리 (create.js 가 옵션을 채운다) -->
+            <div class="field">
+              <label for="categoryId">카테고리 ＊</label>
+              <select class="input select" id="categoryId" name="categoryId"></select>
+              <p class="field__error" data-error="categoryId"></p>
+            </div>
+
+            <!-- 가격 -->
+            <div class="field">
+              <label for="price">가격 (원) ＊</label>
+              <input
+                class="input"
+                id="price"
+                name="price"
+                type="number"
+                min="0"
+                step="100"
+                inputmode="numeric"
+                placeholder="예: 6000"
+              />
+              <p class="field__error" data-error="price"></p>
+            </div>
+
+            <!-- 이미지 URL -->
+            <div class="field form-grid__full">
+              <label for="image">이미지 주소 (URL)</label>
+              <input
+                class="input"
+                id="image"
+                name="image"
+                type="url"
+                placeholder="https:// 로 시작하는 이미지 주소"
+                autocomplete="off"
+              />
+              <p class="field__error" data-error="image"></p>
+            </div>
+
+            <!-- 설명 -->
+            <div class="field form-grid__full">
+              <label for="description">메뉴 설명 ＊</label>
+              <textarea
+                class="input textarea"
+                id="description"
+                name="description"
+                maxlength="200"
+                placeholder="이 한 잔이 어떤 바다를 담고 있는지 알려주세요."
+              ></textarea>
+              <p class="field__error" data-error="description"></p>
+            </div>
+
+            <!-- 태그 -->
+            <div class="field form-grid__full">
+              <label for="tags">태그</label>
+              <input
+                class="input"
+                id="tags"
+                name="tags"
+                type="text"
+                placeholder="쉼표로 구분 — 예: 시그니처, ICE"
+                autocomplete="off"
+              />
+            </div>
+
+            <!-- 품절 여부 -->
+            <div class="form-grid__full">
+              <label class="check">
+                <input type="checkbox" id="soldOut" name="soldOut" />
+                <span>품절 상태로 등록 (수면 아래에 둡니다)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <a class="btn btn--outline" href="./list.html">취소</a>
+            <button class="btn btn--primary" type="submit">메뉴 등록</button>
+          </div>
+        </section>
+
+        <!-- 실시간 미리보기 -->
+        <aside class="card preview-card">
+          <h2 class="preview-card__title">미리보기</h2>
+          <div class="preview">
+            <div class="preview__thumb">
+              <img data-preview-image alt="" hidden />
+            </div>
+            <div class="preview__body">
+              <span class="badge" data-preview-category>카테고리</span>
+              <h3 class="preview__name" data-preview-name>메뉴 이름</h3>
+              <strong class="preview__price" data-preview-price>0원</strong>
+              <p class="preview__desc text-muted" data-preview-desc>
+                메뉴 설명이 이곳에 나타납니다.
+              </p>
+            </div>
+          </div>
+          <p class="preview-card__hint text-muted">
+            입력하는 대로 고객 화면에 비칠 모습을 보여 줍니다.
+          </p>
+        </aside>
+      </form>
+    </main>
+  </body>
+</html>

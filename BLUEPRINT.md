@@ -110,18 +110,18 @@ cafe-app/
 
 ### 2단계: 관리자 - 메뉴 관리 시스템
 
-- [ ] `admin/menus/list.html` — 메뉴 목록
-- [ ] `admin/menus/list.css`
-- [ ] `admin/menus/list.js`
-- [ ] `admin/menus/detail.html` — 메뉴 상세
-- [ ] `admin/menus/detail.css`
-- [ ] `admin/menus/detail.js`
-- [ ] `admin/menus/create.html` — 메뉴 추가
-- [ ] `admin/menus/create.css`
-- [ ] `admin/menus/create.js`
-- [ ] `admin/menus/edit.html` — 메뉴 수정
-- [ ] `admin/menus/edit.css`
-- [ ] `admin/menus/edit.js`
+- [x] `admin/menus/list.html` — 메뉴 목록
+- [x] `admin/menus/list.css`
+- [x] `admin/menus/list.js`
+- [x] `admin/menus/detail.html` — 메뉴 상세
+- [x] `admin/menus/detail.css`
+- [x] `admin/menus/detail.js`
+- [x] `admin/menus/create.html` — 메뉴 추가
+- [x] `admin/menus/create.css`
+- [x] `admin/menus/create.js`
+- [x] `admin/menus/edit.html` — 메뉴 수정
+- [x] `admin/menus/edit.css`
+- [x] `admin/menus/edit.js`
 
 ### 3단계: 고객 - 메뉴 조회 시스템
 
