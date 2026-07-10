@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>동해 카페 — 수평선 너머의 한 잔</title>
+    <meta
+      name="description"
+      content="깊은 바다를 담은 음료와 디저트. 동해 카페에서 시원한 한 잔을 만나 보세요."
+    />
+
+    <!-- 1단계 공유 자원 (전역 변수 · 리셋 · 공통 컴포넌트) -->
+    <link rel="stylesheet" href="css/variables.css" />
+    <!-- 이 페이지 전용 스타일 -->
+    <link rel="stylesheet" href="index.css" />
+
+    <!-- defer 는 순서를 보장한다: data.js → utils.js → 페이지 스크립트 -->
+    <script defer src="js/data.js"></script>
+    <script defer src="js/utils.js"></script>
+    <script defer src="index.js"></script>
+  </head>
+  <body>
+    <!--
+      고객용 헤더 — 3·4·5단계의 .site-header 를 그대로 재사용.
+      이 파일만 프로젝트 루트에 있으므로 링크에서 ../ 를 뺀 것 외에는 동일하다.
+    -->
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a class="site-header__logo" href="index.html">🌊 동해 카페</a>
+
+        <nav class="site-header__nav">
+          <a class="btn btn--ghost" href="index.html" aria-current="page">홈</a>
+          <a class="btn btn--ghost" href="menus/list.html">메뉴</a>
+
+          <!-- 장바구니: data-cart-badge 는 CafeUtils.updateCartBadges 가 자동으로 채운다 -->
+          <a class="site-header__cart" href="basket/list.html">
+            <span aria-hidden="true">🧺</span>
+            <span class="sr-only">장바구니</span>
+            <span class="site-header__cart-count" data-cart-badge hidden>0</span>
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <!-- ============================================
+           히어로 — 깊은 바다 그라데이션 위의 인트로
+           ============================================ -->
+      <section class="hero">
+        <div class="container hero__inner">
+          <p class="hero__eyebrow">EAST SEA COFFEE · SINCE 2026</p>
+          <h1 class="hero__title">
+            수평선 너머에서<br />
+            건져 올린 한 잔
+          </h1>
+          <p class="hero__desc">
+            깊은 바다의 푸른색과 파도의 흰 거품을 그대로 담았습니다.<br />
+            오늘의 동해를 한 모금 마셔 보세요.
+          </p>
+          <div class="hero__actions">
+            <a class="btn btn--primary btn--lg" href="menus/list.html">메뉴 보러가기</a>
+            <a class="btn btn--outline btn--lg hero__ghost" href="orders/list.html">
+              주문 내역
+            </a>
+          </div>
+        </div>
+        <!-- 수면을 가르는 물결 띠 (장식용이라 스크린리더에서 숨김) -->
+        <div class="hero__wave" aria-hidden="true"></div>
+      </section>
+
+      <!-- ============================================
+           카테고리 바로가기
+           클릭 → menus/list.html?category=<id> (list.js 가 쿼리를 읽어 필터링)
+           ============================================ -->
+      <section class="container section">
+        <div class="section__head">
+          <div>
+            <p class="breadcrumb">CATEGORY</p>
+            <h2 class="section__title">무엇을 마실까요</h2>
+          </div>
+          <a class="btn btn--ghost btn--sm section__more" href="menus/list.html">
+            전체 보기 →
+          </a>
+        </div>
+
+        <div class="category-grid" data-categories>
+          <!-- index.js 가 렌더 -->
+        </div>
+      </section>
+
+      <!-- ============================================
+           인기 메뉴 (품절 제외)
+           ============================================ -->
+      <section class="container section">
+        <div class="section__head">
+          <div>
+            <p class="breadcrumb">POPULAR</p>
+            <h2 class="section__title">오늘의 인기 메뉴</h2>
+          </div>
+          <a class="btn btn--ghost btn--sm section__more" href="menus/list.html">
+            전체 보기 →
+          </a>
+        </div>
+
+        <div class="pick-grid" data-picks aria-live="polite">
+          <!-- index.js 가 렌더 -->
+        </div>
+      </section>
+
+      <!-- ============================================
+           카페 소개 · 위치 (정적 텍스트)
+           ============================================ -->
+      <section class="container section">
+        <div class="about card">
+          <div class="about__text">
+            <p class="breadcrumb">ABOUT</p>
+            <h2 class="section__title">동해 카페</h2>
+            <p class="about__desc">
+              파도 소리가 들리는 자리에서, 바다를 닮은 음료를 내립니다.
+              직접 로스팅한 원두와 매일 아침 만드는 디저트로
+              하루의 첫 물결을 준비합니다.
+            </p>
+            <div class="about__tags">
+              <span class="badge badge--sand">직접 로스팅</span>
+              <span class="badge badge--sand">오션뷰</span>
+              <span class="badge badge--sand">반려동물 동반</span>
+            </div>
+          </div>
+
+          <dl class="about__info">
+            <div class="about__row">
+              <dt>위치</dt>
+              <dd>강원특별자치도 강릉시 창해로 273</dd>
+            </div>
+            <div class="about__row">
+              <dt>영업시간</dt>
+              <dd>매일 08:00 – 22:00</dd>
+            </div>
+            <div class="about__row">
+              <dt>전화</dt>
+              <dd>033-000-0000</dd>
+            </div>
+            <div class="about__row">
+              <dt>주차</dt>
+              <dd>건물 뒤편 무료 주차 (10대)</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+    </main>
+
+    <!-- 간단한 푸터 -->
+    <footer class="site-footer">
+      <div class="container">
+        <p>🌊 동해 카페 · East Sea Coffee</p>
+        <p class="text-muted">© 2026 East Sea Coffee. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -5,7 +5,8 @@
    ============================================ */
 
 (function () {
-  const { $, formatPrice, escapeHtml, showToast, addToCart } = window.CafeUtils;
+  const { $, getParam, formatPrice, escapeHtml, showToast, addToCart } =
+    window.CafeUtils;
   const { getMenuById, getCategories, getCategoryById, getMenusByCategory } =
     window.CafeData;
 
@@ -176,6 +177,13 @@
   if (flash) {
     sessionStorage.removeItem("cafe.flash");
     showToast(flash, "success");
+  }
+
+  // 메인 페이지의 카테고리 바로가기(?category=<id>)로 들어오면 그 필터로 시작한다.
+  // 없는 카테고리 id 면 무시하고 기본값("전체")을 유지한다.
+  const initialCategory = getParam("category");
+  if (initialCategory && getCategoryById(initialCategory)) {
+    state.categoryId = initialCategory;
   }
 
   renderFilters();

@@ -1,0 +1,480 @@
+/* ============================================
+   🌊 고객 - 메인 페이지 (index.html)
+   색상·간격·타이포는 모두 variables.css 의 변수만 사용한다.
+   새 hex 색상 코드는 단 하나도 정의하지 않는다.
+
+   .site-header / .page-head 블록은 3·4·5단계에서 그대로 가져온 것이다.
+   코로케이션 원칙 때문에 생긴 의도적 중복이며,
+   BLUEPRINT 의 .admin-top 과 마찬가지로 8단계에서 공용화를 재검토한다.
+   ============================================ */
+
+/* --- 고객용 헤더 (수면 그라데이션) --- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  background: var(--grad-ocean);
+  color: var(--foam);
+  box-shadow: var(--shadow-md);
+}
+
+.site-header__inner {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.site-header__logo {
+  font-weight: 700;
+  font-size: var(--fs-lg);
+  color: var(--foam);
+}
+
+.site-header__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* 어두운 헤더 위에서는 버튼 색을 거품색으로 반전 */
+.site-header__nav .btn {
+  color: var(--foam);
+}
+
+.site-header__nav .btn--ghost:hover {
+  background: var(--glass-bg-deep);
+  color: var(--foam);
+}
+
+/* 장바구니 아이콘 + 수량 배지 */
+.site-header__cart {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-left: var(--space-xs);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg-deep);
+  font-size: var(--fs-lg);
+  transition: box-shadow var(--transition);
+}
+
+.site-header__cart:hover {
+  box-shadow: var(--glow-aqua);
+}
+
+/* 담긴 수량 — 모래빛 원형 배지 */
+.site-header__cart-count {
+  position: absolute;
+  top: -0.3rem;
+  right: -0.3rem;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--sand);
+  color: var(--sea-abyss);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  box-shadow: var(--shadow-sm);
+}
+
+/* hidden 속성이 붙어도 inline-flex 가 이기지 않도록 */
+.site-header__cart-count[hidden] {
+  display: none;
+}
+
+/* --- 페이지 제목 --- */
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin: var(--space-xl) 0 var(--space-lg);
+}
+
+.breadcrumb {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--color-accent);
+  letter-spacing: 0.02em;
+}
+
+.page-head__title {
+  font-size: var(--fs-2xl);
+  margin-top: var(--space-xs);
+}
+
+.page-head__sub {
+  margin-top: var(--space-xs);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+/* ============================================
+   히어로 — 깊은 바다 위의 인트로
+   ============================================ */
+
+.hero {
+  position: relative;
+  background: var(--grad-ocean);
+  color: var(--foam);
+  overflow: hidden;
+}
+
+/* 수면에 빛이 스며드는 느낌의 물빛 번짐 (장식) */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 82% 18%, var(--glass-bg-deep), transparent 55%),
+    radial-gradient(circle at 8% 92%, var(--glass-bg-deep), transparent 50%);
+  pointer-events: none;
+}
+
+.hero__inner {
+  position: relative; /* ::before 위로 올린다 */
+  z-index: 1;
+  padding-block: var(--space-2xl);
+  text-align: center;
+}
+
+.hero__eyebrow {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--sea-sky);
+}
+
+/* 히어로 제목만 거품색 — h1 기본색(--sea-navy)을 덮어쓴다 */
+.hero__title {
+  margin-top: var(--space-md);
+  font-size: var(--fs-3xl);
+  color: var(--foam);
+  text-shadow: var(--shadow-md);
+}
+
+.hero__desc {
+  margin-top: var(--space-md);
+  font-size: var(--fs-md);
+  color: var(--sea-sky);
+}
+
+.hero__actions {
+  margin-top: var(--space-xl);
+  display: flex;
+  justify-content: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+/* 어두운 배경 위에서는 outline 버튼을 유리처럼 비운다 */
+.hero__ghost {
+  background: var(--glass-bg-deep);
+  border-color: var(--glass-border);
+  color: var(--foam);
+}
+
+.hero__ghost:hover {
+  border-color: var(--sea-aqua);
+  color: var(--sea-sky);
+}
+
+/* 히어로 아래를 가르는 물결 띠 */
+.hero__wave {
+  position: relative;
+  z-index: 1;
+  height: 6px;
+  background: var(--grad-wave);
+}
+
+/* ============================================
+   섹션 공통
+   ============================================ */
+
+.section {
+  margin-top: var(--space-2xl);
+}
+
+.section__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-lg);
+}
+
+.section__title {
+  margin-top: var(--space-xs);
+  font-size: var(--fs-2xl);
+}
+
+.section__more {
+  color: var(--color-accent);
+}
+
+/* ============================================
+   카테고리 바로가기
+   ============================================ */
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-md);
+}
+
+/* .card 를 재사용하고 바로가기 전용 규칙만 덧붙인다 */
+.category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg) var(--space-md);
+  text-align: center;
+}
+
+/* 물방울처럼 둥근 이모지 배경 */
+.category-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: var(--radius-full);
+  background: var(--grad-surface);
+  font-size: var(--fs-xl);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition);
+}
+
+.category-card:hover .category-card__icon {
+  box-shadow: var(--glow-aqua);
+}
+
+.category-card__name {
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* ============================================
+   인기 메뉴 카드
+   ============================================ */
+
+.pick-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-lg);
+}
+
+.pick-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 썸네일 — 이미지 로드 전/실패 시 수면 배경이 비친다 */
+.pick-card__thumb {
+  position: relative;
+  display: block;
+  height: 160px;
+  background: var(--grad-surface);
+}
+
+.pick-card__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.pick-card:hover .pick-card__thumb img {
+  transform: scale(1.04); /* 물결에 살짝 일렁이듯 */
+}
+
+.pick-card__flag {
+  position: absolute;
+  top: var(--space-sm);
+  left: var(--space-sm);
+  z-index: 1;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.pick-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  flex: 1;
+}
+
+.pick-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.pick-card__price {
+  font-size: var(--fs-md);
+  color: var(--sea-cobalt);
+  font-variant-numeric: tabular-nums;
+}
+
+.pick-card__name {
+  font-size: var(--fs-lg);
+}
+
+.pick-card__name a:hover {
+  color: var(--color-accent);
+}
+
+/* 설명은 두 줄까지만 — 넘치면 말줄임 */
+.pick-card__desc {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pick-card__actions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: auto;
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--color-border);
+}
+
+.pick-card__actions .btn {
+  flex: 1;
+}
+
+/* ============================================
+   카페 소개 · 위치
+   ============================================ */
+
+.about {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: var(--space-xl);
+  padding: var(--space-xl);
+}
+
+/* 큰 정보 패널이 hover 마다 들썩이지 않도록 .card 의 이동 효과만 끈다 */
+.about:hover {
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.about__desc {
+  margin-top: var(--space-md);
+  color: var(--color-text-muted);
+}
+
+.about__tags {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+  margin-top: var(--space-lg);
+}
+
+.about__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+}
+
+.about__row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-md);
+  font-size: var(--fs-sm);
+}
+
+.about__row dt {
+  flex: 0 0 4.5rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.about__row dd {
+  color: var(--color-text);
+}
+
+/* ============================================
+   푸터
+   ============================================ */
+
+.site-footer {
+  margin-top: var(--space-2xl);
+  padding-block: var(--space-xl);
+  background: var(--sea-navy);
+  color: var(--foam);
+  text-align: center;
+  font-size: var(--fs-sm);
+}
+
+/* 어두운 푸터에서는 muted 색을 물빛으로 올린다 */
+.site-footer .text-muted {
+  margin-top: var(--space-xs);
+  color: var(--sea-sky);
+  font-size: var(--fs-xs);
+}
+
+/* ============================================
+   반응형 — 좁은 화면에서 섹션이 세로로 쌓이도록
+   ============================================ */
+
+@media (max-width: 900px) {
+  .about {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+  }
+}
+
+@media (max-width: 600px) {
+  .hero__inner {
+    padding-block: var(--space-xl);
+  }
+
+  .hero__title {
+    font-size: var(--fs-2xl);
+  }
+
+  .hero__actions {
+    flex-direction: column;
+  }
+
+  .hero__actions .btn {
+    width: 100%;
+  }
+
+  .section__head {
+    align-items: flex-start;
+  }
+
+  /* 카테고리는 두 칸으로 접는다 */
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
