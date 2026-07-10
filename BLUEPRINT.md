@@ -73,6 +73,8 @@ cafe-app/
 │   └── js/
 │       ├── data.js                   # 메뉴/카테고리 데이터
 │       └── utils.js                  # 공통 유틸리티
+│
+└── jsconfig.json                     # 편집기 설정 (순수 JS · checkJs: false)
 ```
 
 ## 👥 역할별 기능
@@ -98,6 +100,26 @@ cafe-app/
 - 전역 공통 자원만 `/css/`, `/js/` 폴더에 분리
 - 역할별 독립 폴더로 관심사를 분리
 
+## 🧩 구현 규약 (2단계에서 확정)
+
+- **스크립트 로드 순서**: `data.js` → `utils.js` → 페이지 JS. `defer` 로 순서를 보장한다.
+  (`utils.js` 는 `window.CafeData` 에 의존)
+- **페이지 JS 는 IIFE 로 감싸고**, `window.CafeData` / `window.CafeUtils` 를 통해서만 데이터에 접근한다.
+- **색상은 하드코딩 금지.** 새 CSS 는 `variables.css` 의 `var(--*)` 만 사용한다.
+- **공통 컴포넌트 클래스**(`.card` `.btn` `.badge` `.chip` `.field` `.input` `.glass`)는
+  재정의하지 않고, 하위·조합 선택자로만 확장한다.
+- **XSS 방어**: `innerHTML` 로 출력하는 모든 사용자 입력에 `CafeUtils.escapeHtml()` 적용.
+  단, **이미지 주소는 이스케이프만으로 부족**하므로 `http(s)` 스킴만 통과시키는
+  `safeImageUrl()` 을 각 페이지에 둔다 (`javascript:` 차단).
+  `textContent` 로 넣는 값은 이스케이프가 필요 없다.
+- **페이지 이동 후 토스트**: 이동하면 토스트가 사라지므로, 보낼 메시지를
+  `sessionStorage` 의 `cafe.flash` 키에 남기고 **도착 페이지가 읽어서 `showToast()`** 한다.
+  (등록·수정·삭제 결과를 목록 페이지에서 표시)
+- **삭제는 항상 `confirm()` 후 실행**하고, 목록/그리드의 버튼은 **이벤트 위임**으로 처리한다
+  (다시 렌더해도 동작하도록).
+- **관리자 헤더**(`.admin-top`)는 현재 각 페이지 CSS 에 중복 정의되어 있다.
+  코로케이션 원칙 때문에 생긴 의도적 중복이며, **8단계에서 공용화 여부를 재검토**한다.
+
 ---
 
 ## ✅ 구현 TODO
@@ -108,20 +130,20 @@ cafe-app/
 - [x] `js/data.js` — 메뉴/카테고리 데이터
 - [x] `js/utils.js` — 공통 유틸리티 (카트, 포맷 등)
 
-### 2단계: 관리자 - 메뉴 관리 시스템
+### 2단계: 관리자 - 메뉴 관리 시스템 ✅
 
-- [ ] `admin/menus/list.html` — 메뉴 목록
-- [ ] `admin/menus/list.css`
-- [ ] `admin/menus/list.js`
-- [ ] `admin/menus/detail.html` — 메뉴 상세
-- [ ] `admin/menus/detail.css`
-- [ ] `admin/menus/detail.js`
-- [ ] `admin/menus/create.html` — 메뉴 추가
-- [ ] `admin/menus/create.css`
-- [ ] `admin/menus/create.js`
-- [ ] `admin/menus/edit.html` — 메뉴 수정
-- [ ] `admin/menus/edit.css`
-- [ ] `admin/menus/edit.js`
+- [x] `admin/menus/list.html` — 메뉴 목록 (카드 그리드 · 카테고리 필터 · 검색 · 요약 지표)
+- [x] `admin/menus/list.css`
+- [x] `admin/menus/list.js`
+- [x] `admin/menus/detail.html` — 메뉴 상세 (품절 ↔ 판매 재개 토글 포함)
+- [x] `admin/menus/detail.css`
+- [x] `admin/menus/detail.js`
+- [x] `admin/menus/create.html` — 메뉴 추가 (인라인 검증 · 실시간 미리보기)
+- [x] `admin/menus/create.css`
+- [x] `admin/menus/create.js`
+- [x] `admin/menus/edit.html` — 메뉴 수정 (기존 값 프리필)
+- [x] `admin/menus/edit.css`
+- [x] `admin/menus/edit.js`
 
 ### 3단계: 고객 - 메뉴 조회 시스템
 
