@@ -1,0 +1,331 @@
+/* ============================================
+   🌊 고객 - 장바구니 (list.html)
+   색상·간격·타이포는 모두 variables.css 의 변수만 사용한다.
+   새 hex 색상 코드는 단 하나도 정의하지 않는다.
+
+   .site-header / .page-head 블록은 3단계(menus/list.css)에서
+   그대로 가져온 것이다. 코로케이션 원칙 때문에 생긴 의도적 중복이며,
+   BLUEPRINT 의 .admin-top 과 마찬가지로 8단계에서 공용화를 재검토한다.
+   ============================================ */
+
+/* --- 고객용 헤더 (수면 그라데이션) --- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  background: var(--grad-ocean);
+  color: var(--foam);
+  box-shadow: var(--shadow-md);
+}
+
+.site-header__inner {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.site-header__logo {
+  font-weight: 700;
+  font-size: var(--fs-lg);
+  color: var(--foam);
+}
+
+.site-header__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* 어두운 헤더 위에서는 버튼 색을 거품색으로 반전 */
+.site-header__nav .btn {
+  color: var(--foam);
+}
+
+.site-header__nav .btn--ghost:hover {
+  background: var(--glass-bg-deep);
+  color: var(--foam);
+}
+
+/* 장바구니 아이콘 + 수량 배지 */
+.site-header__cart {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-left: var(--space-xs);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg-deep);
+  font-size: var(--fs-lg);
+  transition: box-shadow var(--transition);
+}
+
+.site-header__cart:hover {
+  box-shadow: var(--glow-aqua);
+}
+
+/* 담긴 수량 — 모래빛 원형 배지 */
+.site-header__cart-count {
+  position: absolute;
+  top: -0.3rem;
+  right: -0.3rem;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--sand);
+  color: var(--sea-abyss);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  box-shadow: var(--shadow-sm);
+}
+
+/* hidden 속성이 붙어도 inline-flex 가 이기지 않도록 */
+.site-header__cart-count[hidden] {
+  display: none;
+}
+
+/* --- 페이지 제목 --- */
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin: var(--space-xl) 0 var(--space-lg);
+}
+
+.breadcrumb {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--color-accent);
+  letter-spacing: 0.02em;
+}
+
+.page-head__title {
+  font-size: var(--fs-2xl);
+  margin-top: var(--space-xs);
+}
+
+.page-head__sub {
+  margin-top: var(--space-xs);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+/* ============================================
+   장바구니 레이아웃
+   왼쪽: 담긴 메뉴 목록 · 오른쪽: 결제 요약 (데스크톱에서 고정)
+   ============================================ */
+
+.basket-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  align-items: start;
+  gap: var(--space-lg);
+  padding-bottom: var(--space-2xl);
+}
+
+.basket-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* --- 장바구니 항목 (.card 재사용 + 목록 전용 규칙만 덧붙임) --- */
+.basket-item {
+  display: grid;
+  grid-template-columns: 96px 1fr auto;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+}
+
+/* 썸네일 — 이미지 로드 전/실패 시 수면 배경이 비친다 */
+.basket-item__thumb {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--grad-surface);
+}
+
+.basket-item__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 품절 메뉴는 수면 아래로 가라앉은 듯 어둡게 */
+.basket-item--soldout .basket-item__thumb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--glass-bg-deep);
+}
+
+.basket-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0; /* 긴 이름이 그리드를 밀어내지 않도록 */
+}
+
+.basket-item__name {
+  font-size: var(--fs-lg);
+}
+
+.basket-item__name a:hover {
+  color: var(--color-accent);
+}
+
+.basket-item__unit {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 수량 스텝퍼 · 금액 · 삭제 버튼 묶음 */
+.basket-item__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+/* 항목별 합계 — 오른쪽 정렬 숫자 폭을 고정해 세로로 줄이 맞도록 */
+.basket-item__line {
+  min-width: 6.5rem;
+  text-align: right;
+  font-size: var(--fs-md);
+  color: var(--sea-cobalt);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================
+   결제 요약 (.card 재사용)
+   ============================================ */
+
+.summary {
+  position: sticky;
+  /* 스티키 헤더에 가리지 않도록 헤더 높이만큼 내려서 붙인다 */
+  top: calc(var(--header-height) + var(--space-md));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+}
+
+/* 고정 패널이 hover 마다 들썩이지 않도록 .card 의 이동 효과만 끈다 */
+.summary:hover {
+  transform: none;
+  box-shadow: var(--shadow-md);
+}
+
+.summary__title {
+  font-size: var(--fs-lg);
+}
+
+.summary__rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.summary__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.summary__row dd {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+/* 총 결제 금액 — 물결 그라데이션 위 굵은 숫자 */
+.summary__total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+}
+
+.summary__total-label {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.summary__total-value {
+  font-size: var(--fs-xl);
+  color: var(--sea-cobalt);
+  font-variant-numeric: tabular-nums;
+}
+
+.summary__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* 품절 상품이 섞여 있을 때의 안내 */
+.summary__notice {
+  font-size: var(--fs-xs);
+  color: var(--color-warning);
+}
+
+/* ============================================
+   반응형 — 좁은 화면에서는 한 줄로 쌓는다
+   ============================================ */
+
+@media (max-width: 900px) {
+  .basket-layout {
+    grid-template-columns: 1fr;
+  }
+
+  /* 모바일에서는 요약을 아래에 그대로 두고 고정 해제 */
+  .summary {
+    position: static;
+  }
+}
+
+@media (max-width: 600px) {
+  .page-head {
+    align-items: flex-start;
+  }
+
+  /* 썸네일 + 정보 / 컨트롤 두 줄로 분리 */
+  .basket-item {
+    grid-template-columns: 72px 1fr;
+    row-gap: var(--space-sm);
+  }
+
+  .basket-item__thumb {
+    width: 72px;
+    height: 72px;
+  }
+
+  .basket-item__controls {
+    grid-column: 1 / -1;
+    justify-content: space-between;
+  }
+
+  .basket-item__line {
+    min-width: 0;
+  }
+}
