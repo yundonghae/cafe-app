@@ -213,13 +213,13 @@
       render();
 
       // 페이지를 이동하면 토스트가 사라지므로 도착 페이지가 대신 띄우도록 남긴다
-      // (5단계 주문 페이지는 아직 없어 메뉴 목록으로 보낸다)
+      // (5단계 완성 → 방금 만든 주문의 상세 페이지로 보낸다)
       sessionStorage.setItem(
         "cafe.flash",
         `주문이 접수되었습니다. 정성껏 준비할게요! ☕`
       );
       setTimeout(() => {
-        location.href = "../menus/list.html";
+        location.href = `../orders/detail.html?id=${encodeURIComponent(order.id)}`;
       }, 1200);
     }
   });

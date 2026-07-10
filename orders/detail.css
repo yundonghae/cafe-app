@@ -1,0 +1,282 @@
+/* ============================================
+   🌊 고객 - 주문 상세 (detail.html)
+   색상·간격·타이포는 모두 variables.css 의 변수만 사용한다.
+   새 hex 색상 코드는 단 하나도 정의하지 않는다.
+
+   .site-header / .page-head 블록은 3·4단계에서 그대로 가져온 것이다.
+   코로케이션 원칙 때문에 생긴 의도적 중복이며,
+   BLUEPRINT 의 .admin-top 과 마찬가지로 8단계에서 공용화를 재검토한다.
+   ============================================ */
+
+/* --- 고객용 헤더 (수면 그라데이션) --- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  background: var(--grad-ocean);
+  color: var(--foam);
+  box-shadow: var(--shadow-md);
+}
+
+.site-header__inner {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.site-header__logo {
+  font-weight: 700;
+  font-size: var(--fs-lg);
+  color: var(--foam);
+}
+
+.site-header__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* 어두운 헤더 위에서는 버튼 색을 거품색으로 반전 */
+.site-header__nav .btn {
+  color: var(--foam);
+}
+
+.site-header__nav .btn--ghost:hover {
+  background: var(--glass-bg-deep);
+  color: var(--foam);
+}
+
+/* 장바구니 아이콘 + 수량 배지 */
+.site-header__cart {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-left: var(--space-xs);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg-deep);
+  font-size: var(--fs-lg);
+  transition: box-shadow var(--transition);
+}
+
+.site-header__cart:hover {
+  box-shadow: var(--glow-aqua);
+}
+
+/* 담긴 수량 — 모래빛 원형 배지 */
+.site-header__cart-count {
+  position: absolute;
+  top: -0.3rem;
+  right: -0.3rem;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--sand);
+  color: var(--sea-abyss);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  box-shadow: var(--shadow-sm);
+}
+
+/* hidden 속성이 붙어도 inline-flex 가 이기지 않도록 */
+.site-header__cart-count[hidden] {
+  display: none;
+}
+
+/* --- 페이지 제목 --- */
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin: var(--space-xl) 0 var(--space-lg);
+}
+
+.breadcrumb {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--color-accent);
+  letter-spacing: 0.02em;
+}
+
+.page-head__title {
+  font-size: var(--fs-2xl);
+  margin-top: var(--space-xs);
+}
+
+.page-head__sub {
+  margin-top: var(--space-xs);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+/* ============================================
+   주문 상세
+   ============================================ */
+
+.order-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding-bottom: var(--space-2xl);
+}
+
+/* --- 주문 개요 (.card 재사용) --- */
+.order-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  padding: var(--space-lg);
+}
+
+/* 고정 정보 패널이 hover 마다 들썩이지 않도록 .card 의 이동 효과만 끈다 */
+.order-head:hover,
+.order-items:hover {
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.order-head__id {
+  font-size: var(--fs-xl);
+  color: var(--sea-navy);
+  font-variant-numeric: tabular-nums;
+}
+
+.order-head__date {
+  margin-top: var(--space-xs);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.order-head__status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* --- 메뉴 내역 표 (.card 재사용) --- */
+.order-items {
+  padding: var(--space-lg);
+}
+
+.order-items__title {
+  font-size: var(--fs-lg);
+  margin-bottom: var(--space-md);
+}
+
+/* 표는 가로 스크롤로 좁은 화면을 견딘다 */
+.order-table__scroll {
+  overflow-x: auto;
+}
+
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+}
+
+.order-table th,
+.order-table td {
+  padding: var(--space-md) var(--space-sm);
+  text-align: right;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* 메뉴명 열만 왼쪽 정렬하고 줄바꿈을 허용한다 */
+.order-table th:first-child,
+.order-table td:first-child {
+  text-align: left;
+  white-space: normal;
+}
+
+.order-table thead th {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  border-bottom: 1.5px solid var(--color-border);
+}
+
+.order-table td {
+  font-variant-numeric: tabular-nums;
+}
+
+.order-table__name {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.order-table__subtotal {
+  font-weight: 700;
+  color: var(--sea-cobalt);
+}
+
+/* 총 결제 금액 행 — 밑줄 없이 강조 */
+.order-table tfoot td {
+  border-bottom: none;
+  padding-top: var(--space-lg);
+  font-size: var(--fs-md);
+}
+
+.order-table__total-label {
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.order-table__total-value {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  color: var(--sea-cobalt);
+}
+
+/* --- 하단 동작 (목록으로 · 주문 취소) --- */
+.order-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+/* 취소 불가 안내 */
+.order-actions__note {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+/* ============================================
+   반응형
+   ============================================ */
+
+@media (max-width: 600px) {
+  .page-head {
+    align-items: flex-start;
+  }
+
+  .order-head,
+  .order-items {
+    padding: var(--space-md);
+  }
+
+  .order-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .order-actions .btn {
+    width: 100%;
+  }
+}
