@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>메뉴 · 동해 카페</title>
+
+    <!-- 1단계 공유 자원 (전역 변수 · 리셋 · 공통 컴포넌트) -->
+    <link rel="stylesheet" href="../css/variables.css" />
+    <!-- 이 페이지 전용 스타일 -->
+    <link rel="stylesheet" href="./list.css" />
+
+    <!-- defer 는 순서를 보장한다: data.js → utils.js → 페이지 스크립트 -->
+    <script defer src="../js/data.js"></script>
+    <script defer src="../js/utils.js"></script>
+    <script defer src="./list.js"></script>
+  </head>
+  <body>
+    <!-- 고객용 헤더 (관리자의 .admin-top 과 구분되는 .site-header) -->
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a class="site-header__logo" href="../index.html">🌊 동해 카페</a>
+
+        <nav class="site-header__nav">
+          <a class="btn btn--ghost" href="../index.html">홈</a>
+          <a class="btn btn--ghost" href="./list.html" aria-current="page">메뉴</a>
+
+          <!-- 장바구니: data-cart-badge 는 CafeUtils.updateCartBadges 가 자동으로 채운다 -->
+          <a class="site-header__cart" href="../basket/list.html">
+            <span aria-hidden="true">🧺</span>
+            <span class="sr-only">장바구니</span>
+            <span class="site-header__cart-count" data-cart-badge hidden>0</span>
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- 페이지 제목 (2단계 page-head 패턴 재사용) -->
+      <div class="page-head">
+        <div>
+          <p class="breadcrumb">동해 카페 · 메뉴</p>
+          <h1 class="page-head__title">오늘의 바다</h1>
+          <p class="page-head__sub">
+            수평선 너머에서 건져 올린 한 잔을 고르세요.
+          </p>
+        </div>
+      </div>
+
+      <!-- 필터 · 검색 (.glass 재사용) -->
+      <section class="toolbar glass">
+        <div class="toolbar__filters" data-filters role="group" aria-label="카테고리 필터">
+          <!-- 카테고리 버튼은 list.js 가 렌더 -->
+        </div>
+        <div class="toolbar__search field">
+          <label class="sr-only" for="search">메뉴 검색</label>
+          <input
+            class="input"
+            id="search"
+            type="search"
+            data-search
+            placeholder="마시고 싶은 바다를 검색해 보세요"
+            autocomplete="off"
+          />
+        </div>
+      </section>
+
+      <!-- 메뉴 카드 그리드 -->
+      <section class="grid" data-grid aria-live="polite">
+        <!-- list.js 가 렌더 -->
+      </section>
+    </main>
+  </body>
+</html>

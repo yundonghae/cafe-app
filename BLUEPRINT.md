@@ -145,14 +145,18 @@ cafe-app/
 - [x] `admin/menus/edit.css`
 - [x] `admin/menus/edit.js`
 
-### 3단계: 고객 - 메뉴 조회 시스템
+### 3단계: 고객 - 메뉴 조회 시스템 ✅
 
-- [ ] `menus/list.html` — 메뉴 목록
-- [ ] `menus/list.css`
-- [ ] `menus/list.js`
-- [ ] `menus/detail.html` — 메뉴 상세
-- [ ] `menus/detail.css`
-- [ ] `menus/detail.js`
+- [x] `menus/list.html` — 메뉴 목록 (카테고리 필터 · 검색 · 카드에서 바로 담기)
+- [x] `menus/list.css`
+- [x] `menus/list.js`
+- [x] `menus/detail.html` — 메뉴 상세 (수량 스텝퍼 · 합계 · 장바구니 담기)
+- [x] `menus/detail.css`
+- [x] `menus/detail.js`
+
+> 고객 헤더는 `.site-header` 로 새로 정의 (관리자의 `.admin-top` 과 구분).
+> 장바구니 아이콘은 `data-cart-badge` 를 달아 `CafeUtils.updateCartBadges()` 가 자동으로 채운다.
+> 품절 메뉴는 담기 버튼을 `disabled` 처리한다.
 
 ### 4단계: 고객 - 장바구니 관리 시스템
 

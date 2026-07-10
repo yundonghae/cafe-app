@@ -1,0 +1,256 @@
+/* ============================================
+   🌊 고객 - 메뉴 상세 (detail.html)
+   색상·간격·타이포는 모두 variables.css 의 변수만 사용한다.
+   레이아웃 감각은 2단계(admin/menus/detail.css)와 맞춘다.
+   ============================================ */
+
+/* --- 고객용 헤더 (수면 그라데이션) --- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  background: var(--grad-ocean);
+  color: var(--foam);
+  box-shadow: var(--shadow-md);
+}
+
+.site-header__inner {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.site-header__logo {
+  font-weight: 700;
+  font-size: var(--fs-lg);
+  color: var(--foam);
+}
+
+.site-header__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.site-header__nav .btn {
+  color: var(--foam);
+}
+
+.site-header__nav .btn--ghost:hover {
+  background: var(--glass-bg-deep);
+  color: var(--foam);
+}
+
+/* 장바구니 아이콘 + 수량 배지 */
+.site-header__cart {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-left: var(--space-xs);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg-deep);
+  font-size: var(--fs-lg);
+  transition: box-shadow var(--transition);
+}
+
+.site-header__cart:hover {
+  box-shadow: var(--glow-aqua);
+}
+
+.site-header__cart-count {
+  position: absolute;
+  top: -0.3rem;
+  right: -0.3rem;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--sand);
+  color: var(--sea-abyss);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  box-shadow: var(--shadow-sm);
+}
+
+.site-header__cart-count[hidden] {
+  display: none;
+}
+
+/* --- 페이지 제목 --- */
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin: var(--space-xl) 0 var(--space-lg);
+}
+
+.breadcrumb {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--color-accent);
+  letter-spacing: 0.02em;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.page-head__title {
+  font-size: var(--fs-2xl);
+  margin-top: var(--space-xs);
+}
+
+.page-head__sub {
+  margin-top: var(--space-xs);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+/* --- 상세 레이아웃 (이미지 | 정보) --- */
+.detail {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: var(--space-xl);
+  padding-bottom: var(--space-2xl);
+}
+
+/* 이미지 — .card 재사용 위에 얹는다 */
+.detail__visual {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: var(--grad-surface);
+}
+
+.detail__visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 품절이면 수면 아래로 가라앉은 듯 어둡게 */
+.detail__visual--soldout::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--glass-bg-deep);
+}
+
+.detail__visual .chip {
+  position: absolute;
+  top: var(--space-md);
+  left: var(--space-md);
+  z-index: 1;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+/* 정보 영역 */
+.detail__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.detail__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.detail__name {
+  font-size: var(--fs-2xl);
+}
+
+.detail__price {
+  font-size: var(--fs-xl);
+  color: var(--sea-cobalt);
+  font-variant-numeric: tabular-nums;
+}
+
+.detail__desc {
+  color: var(--color-text-muted);
+  line-height: 1.75;
+}
+
+.detail__tags {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+/* --- 주문 상자 (수량 + 합계 + 담기) --- */
+.buy {
+  margin-top: auto;
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.buy__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.buy__label {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+/* 합계 금액 — 물결선 위에 크게 */
+.buy__total {
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+}
+
+.buy__total-value {
+  font-size: var(--fs-2xl);
+  color: var(--sea-cobalt);
+  font-variant-numeric: tabular-nums;
+}
+
+.buy__actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.buy__actions .btn {
+  flex: 1;
+}
+
+/* 품절 안내 문구 */
+.buy__soldout {
+  font-size: var(--fs-sm);
+  color: var(--color-danger);
+  font-weight: 600;
+}
+
+/* --- 반응형 --- */
+@media (max-width: 860px) {
+  .detail {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .buy__actions {
+    flex-direction: column;
+  }
+}

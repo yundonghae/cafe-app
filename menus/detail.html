@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>메뉴 상세 · 동해 카페</title>
+
+    <link rel="stylesheet" href="../css/variables.css" />
+    <link rel="stylesheet" href="./detail.css" />
+
+    <script defer src="../js/data.js"></script>
+    <script defer src="../js/utils.js"></script>
+    <script defer src="./detail.js"></script>
+  </head>
+  <body>
+    <!-- 고객용 헤더 -->
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a class="site-header__logo" href="../index.html">🌊 동해 카페</a>
+
+        <nav class="site-header__nav">
+          <a class="btn btn--ghost" href="../index.html">홈</a>
+          <a class="btn btn--ghost" href="./list.html">메뉴</a>
+
+          <!-- 장바구니: data-cart-badge 는 CafeUtils.updateCartBadges 가 자동으로 채운다 -->
+          <a class="site-header__cart" href="../basket/list.html">
+            <span aria-hidden="true">🧺</span>
+            <span class="sr-only">장바구니</span>
+            <span class="site-header__cart-count" data-cart-badge hidden>0</span>
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="page-head">
+        <div>
+          <p class="breadcrumb">
+            <a href="./list.html">동해 카페 · 메뉴</a> · 상세
+          </p>
+          <h1 class="page-head__title">메뉴 상세</h1>
+          <p class="page-head__sub">한 잔에 담긴 바다를 들여다봅니다.</p>
+        </div>
+        <a class="btn btn--outline" href="./list.html">← 메뉴로 돌아가기</a>
+      </div>
+
+      <!-- detail.js 가 메뉴를 찾아 이 자리에 렌더한다 -->
+      <section data-detail aria-live="polite"></section>
+    </main>
+  </body>
+</html>
