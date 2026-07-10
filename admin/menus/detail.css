@@ -1,0 +1,214 @@
+/* ============================================
+   🌊 관리자 - 메뉴 상세 (detail.html)
+   색상·간격·타이포는 모두 variables.css 의 변수만 사용한다.
+   ============================================ */
+
+/* --- 상단 관리자 헤더 (심해 그라데이션) --- */
+.admin-top {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  background: var(--grad-ocean);
+  color: var(--foam);
+  box-shadow: var(--shadow-md);
+}
+
+.admin-top__inner {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.admin-top__brand {
+  font-weight: 700;
+  font-size: var(--fs-lg);
+  color: var(--foam);
+}
+
+.admin-top__brand span {
+  margin-left: var(--space-xs);
+  padding: 0.1rem 0.5rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg-deep);
+  font-size: var(--fs-xs);
+  vertical-align: middle;
+}
+
+.admin-top__nav {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.admin-top__nav .btn {
+  color: var(--foam);
+}
+
+.admin-top__nav .btn--ghost:hover {
+  background: var(--glass-bg-deep);
+  color: var(--foam);
+}
+
+.admin-top__nav .btn--outline {
+  background: var(--glass-bg-deep);
+  border-color: var(--glass-border);
+}
+
+.admin-top__nav .btn--outline:hover {
+  color: var(--sea-sky);
+  border-color: var(--sea-sky);
+}
+
+/* --- 페이지 제목 --- */
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin: var(--space-xl) 0 var(--space-lg);
+}
+
+.breadcrumb {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--color-accent);
+  letter-spacing: 0.02em;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.page-head__title {
+  font-size: var(--fs-2xl);
+  margin-top: var(--space-xs);
+}
+
+.page-head__sub {
+  margin-top: var(--space-xs);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+/* --- 상세 레이아웃 (이미지 | 정보) --- */
+.detail {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: var(--space-xl);
+  padding-bottom: var(--space-2xl);
+}
+
+/* 이미지 — .card 재사용 위에 얹는다 */
+.detail__visual {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: var(--grad-surface);
+}
+
+.detail__visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 품절이면 수면 아래로 가라앉은 듯 어둡게 */
+.detail__visual--soldout::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--glass-bg-deep);
+}
+
+.detail__visual .chip {
+  position: absolute;
+  top: var(--space-md);
+  left: var(--space-md);
+  z-index: 1;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+/* 정보 영역 */
+.detail__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.detail__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.detail__name {
+  font-size: var(--fs-2xl);
+}
+
+.detail__price {
+  font-size: var(--fs-xl);
+  color: var(--sea-cobalt);
+  font-variant-numeric: tabular-nums;
+}
+
+.detail__desc {
+  color: var(--color-text-muted);
+  line-height: 1.75;
+}
+
+.detail__tags {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+/* 메타 정보 표 (.card 재사용) */
+.detail__meta {
+  padding: var(--space-md) var(--space-lg);
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.detail__meta-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+  font-size: var(--fs-sm);
+}
+
+.detail__meta-row dt {
+  color: var(--color-text-muted);
+}
+
+.detail__meta-row dd {
+  font-weight: 600;
+  word-break: break-all;
+  text-align: right;
+}
+
+/* 액션 버튼 줄 */
+.detail__actions {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+}
+
+/* --- 반응형 --- */
+@media (max-width: 860px) {
+  .detail {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .detail__actions .btn {
+    flex: 1 1 140px;
+  }
+}

@@ -132,16 +132,16 @@ cafe-app/
 
 ### 2단계: 관리자 - 메뉴 관리 시스템 ✅
 
-- [x] `admin/menus/list.html` — 메뉴 목록 (카드 그리드 · 카테고리 필터 · 검색 · 요약 지표)
+- [x] `admin/menus/list.html` — 메뉴 목록
 - [x] `admin/menus/list.css`
 - [x] `admin/menus/list.js`
-- [x] `admin/menus/detail.html` — 메뉴 상세 (품절 ↔ 판매 재개 토글 포함)
+- [x] `admin/menus/detail.html` — 메뉴 상세
 - [x] `admin/menus/detail.css`
 - [x] `admin/menus/detail.js`
-- [x] `admin/menus/create.html` — 메뉴 추가 (인라인 검증 · 실시간 미리보기)
+- [x] `admin/menus/create.html` — 메뉴 추가
 - [x] `admin/menus/create.css`
 - [x] `admin/menus/create.js`
-- [x] `admin/menus/edit.html` — 메뉴 수정 (기존 값 프리필)
+- [x] `admin/menus/edit.html` — 메뉴 수정
 - [x] `admin/menus/edit.css`
 - [x] `admin/menus/edit.js`
 

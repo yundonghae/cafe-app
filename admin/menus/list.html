@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>메뉴 관리 · 동해 카페 관리자</title>
+
+    <!-- 1단계 공유 자원 (전역 변수 · 리셋 · 공통 컴포넌트) -->
+    <link rel="stylesheet" href="../../css/variables.css" />
+    <!-- 이 페이지 전용 스타일 -->
+    <link rel="stylesheet" href="./list.css" />
+
+    <!-- defer 는 순서를 보장한다: data.js → utils.js → 페이지 스크립트 -->
+    <script defer src="../../js/data.js"></script>
+    <script defer src="../../js/utils.js"></script>
+    <script defer src="./list.js"></script>
+  </head>
+  <body>
+    <!-- 상단 관리자 헤더 (심해 그라데이션) -->
+    <header class="admin-top">
+      <div class="container admin-top__inner">
+        <a class="admin-top__brand" href="./list.html">
+          🌊 동해 카페 <span>관리자</span>
+        </a>
+        <nav class="admin-top__nav">
+          <a class="btn btn--ghost" href="./list.html" aria-current="page">메뉴 관리</a>
+          <a class="btn btn--outline" href="./create.html">＋ 메뉴 추가</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- 페이지 제목 -->
+      <div class="page-head">
+        <div>
+          <p class="breadcrumb">관리자 · 메뉴 관리</p>
+          <h1 class="page-head__title">메뉴 관리</h1>
+          <p class="page-head__sub">
+            밀려오는 파도처럼, 메뉴를 자유롭게 더하고 덜어냅니다.
+          </p>
+        </div>
+        <a class="btn btn--primary" href="./create.html">＋ 새 메뉴 띄우기</a>
+      </div>
+
+      <!-- 요약 지표 (.card 재사용) -->
+      <section class="stats" aria-label="메뉴 요약">
+        <div class="card stat">
+          <span class="stat__label">전체 메뉴</span>
+          <strong class="stat__value" data-stat="total">0</strong>
+        </div>
+        <div class="card stat">
+          <span class="stat__label">판매중</span>
+          <strong class="stat__value" data-stat="onsale">0</strong>
+        </div>
+        <div class="card stat">
+          <span class="stat__label">품절</span>
+          <strong class="stat__value" data-stat="soldout">0</strong>
+        </div>
+      </section>
+
+      <!-- 필터 · 검색 (.glass 재사용) -->
+      <section class="toolbar glass">
+        <div class="toolbar__filters" data-filters role="group" aria-label="카테고리 필터">
+          <!-- 카테고리 버튼은 list.js 가 렌더 -->
+        </div>
+        <div class="toolbar__search field">
+          <label class="sr-only" for="search">메뉴 검색</label>
+          <input
+            class="input"
+            id="search"
+            type="search"
+            data-search
+            placeholder="메뉴 이름이나 설명으로 검색"
+            autocomplete="off"
+          />
+        </div>
+      </section>
+
+      <!-- 메뉴 카드 그리드 -->
+      <section class="grid" data-grid aria-live="polite">
+        <!-- list.js 가 렌더 -->
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>메뉴 상세 · 동해 카페 관리자</title>
+
+    <link rel="stylesheet" href="../../css/variables.css" />
+    <link rel="stylesheet" href="./detail.css" />
+
+    <script defer src="../../js/data.js"></script>
+    <script defer src="../../js/utils.js"></script>
+    <script defer src="./detail.js"></script>
+  </head>
+  <body>
+    <header class="admin-top">
+      <div class="container admin-top__inner">
+        <a class="admin-top__brand" href="./list.html">
+          🌊 동해 카페 <span>관리자</span>
+        </a>
+        <nav class="admin-top__nav">
+          <a class="btn btn--ghost" href="./list.html">메뉴 관리</a>
+          <a class="btn btn--outline" href="./create.html">＋ 메뉴 추가</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="page-head">
+        <div>
+          <p class="breadcrumb">
+            <a href="./list.html">관리자 · 메뉴 관리</a> · 상세
+          </p>
+          <h1 class="page-head__title">메뉴 상세</h1>
+          <p class="page-head__sub">한 잔에 담긴 정보를 깊이 들여다봅니다.</p>
+        </div>
+        <a class="btn btn--outline" href="./list.html">← 목록으로</a>
+      </div>
+
+      <!-- detail.js 가 메뉴를 찾아 이 자리에 렌더한다 -->
+      <section data-detail aria-live="polite"></section>
+    </main>
+  </body>
+</html>
