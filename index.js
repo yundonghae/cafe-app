@@ -8,18 +8,18 @@
   const { $, formatPrice, escapeHtml, showToast, addToCart } = window.CafeUtils;
   const { getCategories, getMenus, getMenuById, getCategoryById } = window.CafeData;
 
-  const categoryBox = $("[data-categories]");
-  const pickBox = $("[data-picks]");
+  const categoryBox = $('[data-categories]');
+  const pickBox = $('[data-picks]');
 
   /** 인기 메뉴로 노출할 개수 (요구사항: 4~6개) */
   const PICK_COUNT = 6;
 
   /** "인기"로 먼저 끌어올릴 태그 */
-  const POPULAR_TAGS = ["베스트", "시그니처"];
+  const POPULAR_TAGS = ['베스트', '시그니처'];
 
   /** http(s) 주소만 통과시켜 위험한 스킴을 막는다 (2·3단계와 동일) */
   function safeImageUrl(url) {
-    return /^https?:\/\//i.test(String(url || "")) ? url : "";
+    return /^https?:\/\//i.test(String(url || '')) ? url : '';
   }
 
   /** Fisher-Yates 셔플 (원본 배열을 건드리지 않는다) */
@@ -50,7 +50,7 @@
             <span class="category-card__name">${escapeHtml(c.name)}</span>
           </a>`;
       })
-      .join("");
+      .join('');
   }
 
   /* ============================================
@@ -65,8 +65,7 @@
   function pickPopularMenus() {
     const sellable = getMenus().filter((m) => !m.soldOut);
 
-    const isPopular = (m) =>
-      (m.tags || []).some((t) => POPULAR_TAGS.includes(t));
+    const isPopular = (m) => (m.tags || []).some((t) => POPULAR_TAGS.includes(t));
 
     const featured = shuffle(sellable.filter(isPopular));
     const rest = shuffle(sellable.filter((m) => !isPopular(m)));
@@ -76,15 +75,13 @@
 
   function pickCardHtml(menu) {
     const category = getCategoryById(menu.categoryId);
-    const categoryLabel = category ? `${category.emoji} ${category.name}` : "미분류";
+    const categoryLabel = category ? `${category.emoji} ${category.name}` : '미분류';
     const image = safeImageUrl(menu.image);
     const detailUrl = `menus/detail.html?id=${encodeURIComponent(menu.id)}`;
 
     // 대표 태그 하나만 카드 위에 띄운다 (없으면 표시하지 않음)
     const badge = (menu.tags || []).find((t) => POPULAR_TAGS.includes(t));
-    const flag = badge
-      ? `<span class="chip chip--info pick-card__flag">${escapeHtml(badge)}</span>`
-      : "";
+    const flag = badge ? `<span class="chip chip--info pick-card__flag">${escapeHtml(badge)}</span>` : '';
 
     return `
       <article class="card pick-card">
@@ -95,7 +92,7 @@
             image
               ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(menu.name)}"
                    loading="lazy" onerror="this.style.display='none'">`
-              : ""
+              : ''
           }
         </a>
         <div class="pick-card__body">
@@ -130,15 +127,15 @@
       return;
     }
 
-    pickBox.innerHTML = menus.map(pickCardHtml).join("");
+    pickBox.innerHTML = menus.map(pickCardHtml).join('');
   }
 
   /* ============================================
      이벤트 (다시 그려도 동작하도록 위임 사용)
      ============================================ */
 
-  pickBox.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-add]");
+  pickBox.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-add]');
     if (!btn) return;
 
     const menu = getMenuById(btn.dataset.add);
@@ -146,13 +143,13 @@
 
     // 화면을 띄운 뒤 사장님이 품절 처리했을 수도 있으니 한 번 더 확인
     if (menu.soldOut) {
-      showToast(`'${menu.name}' 은(는) 방금 품절되었습니다.`, "warning");
+      showToast(`'${menu.name}' 은(는) 방금 품절되었습니다.`, 'warning');
       renderPicks();
       return;
     }
 
     addToCart(menu.id, 1); // 내부에서 장바구니 배지까지 갱신된다
-    showToast(`'${menu.name}' 을(를) 장바구니에 담았습니다.`, "success");
+    showToast(`'${menu.name}' 을(를) 장바구니에 담았습니다.`, 'success');
   });
 
   /* ============================================
@@ -160,10 +157,10 @@
      ============================================ */
 
   // 다른 페이지에서 남긴 안내 메시지가 있으면 이어받아 표시한다
-  const flash = sessionStorage.getItem("cafe.flash");
+  const flash = sessionStorage.getItem('cafe.flash');
   if (flash) {
-    sessionStorage.removeItem("cafe.flash");
-    showToast(flash, "success");
+    sessionStorage.removeItem('cafe.flash');
+    showToast(flash, 'success');
   }
 
   renderCategories();
