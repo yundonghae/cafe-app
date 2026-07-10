@@ -158,11 +158,19 @@ cafe-app/
 > 장바구니 아이콘은 `data-cart-badge` 를 달아 `CafeUtils.updateCartBadges()` 가 자동으로 채운다.
 > 품절 메뉴는 담기 버튼을 `disabled` 처리한다.
 
-### 4단계: 고객 - 장바구니 관리 시스템
+### 4단계: 고객 - 장바구니 관리 시스템 ✅
 
-- [ ] `basket/list.html` — 장바구니
-- [ ] `basket/list.css`
-- [ ] `basket/list.js`
+- [x] `basket/list.html` — 장바구니 (수량 스텝퍼 · 항목 삭제 · 결제 요약 · 주문하기)
+- [x] `basket/list.css`
+- [x] `basket/list.js`
+
+> 헤더는 3단계의 `.site-header` 를 그대로 재사용한다 (코로케이션 중복, 8단계에서 재검토).
+> 장바구니 본문 전체를 `render()` 가 다시 그리므로 모든 조작은 **이벤트 위임**으로 처리한다.
+> 수량은 화면 숫자가 아니라 `getCartDetail()` 의 저장값을 기준으로 계산한다.
+> `updateCartQty()` 는 최소 1로 고정되므로, 1개에서 감소는 삭제 버튼으로 안내한다.
+> `checkout()` 이 `null`(빈 장바구니)이면 아무 동작도 하지 않는다.
+> 주문 성공 시 `sessionStorage` 의 `cafe.flash` 에 메시지를 남기고 메뉴 목록으로 이동한다
+> (5단계 주문 페이지 완성 후 이동 대상을 `orders/detail.html` 로 교체할 것).
 
 ### 5단계: 고객 - 주문 관리 시스템
 
