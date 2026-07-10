@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>대시보드 · 동해 카페 관리자</title>
+
+    <!-- 1단계 공유 자원 (전역 변수 · 리셋 · 공통 컴포넌트) -->
+    <link rel="stylesheet" href="../css/variables.css" />
+    <!-- 이 페이지 전용 스타일 -->
+    <link rel="stylesheet" href="./index.css" />
+
+    <!-- defer 는 순서를 보장한다: data.js → utils.js → 페이지 스크립트 -->
+    <script defer src="../js/data.js"></script>
+    <script defer src="../js/utils.js"></script>
+    <script defer src="./index.js"></script>
+  </head>
+  <body>
+    <!-- 상단 관리자 헤더 (2단계 .admin-top 을 그대로 복사, 내비 링크만 3개로 확장) -->
+    <header class="admin-top">
+      <div class="container admin-top__inner">
+        <a class="admin-top__brand" href="./index.html">
+          🌊 동해 카페 <span>관리자</span>
+        </a>
+        <nav class="admin-top__nav">
+          <a class="btn btn--ghost" href="./index.html" aria-current="page">대시보드</a>
+          <a class="btn btn--ghost" href="./menus/list.html">메뉴 관리</a>
+          <a class="btn btn--ghost" href="./orders/list.html">주문 관리</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- 페이지 제목 -->
+      <div class="page-head">
+        <div>
+          <p class="breadcrumb">관리자 · 대시보드</p>
+          <h1 class="page-head__title">오늘의 수평선</h1>
+          <p class="page-head__sub">
+            메뉴와 주문의 흐름을 한눈에 살펴봅니다.
+          </p>
+        </div>
+        <a class="btn btn--primary" href="./orders/list.html">주문 관리로 →</a>
+      </div>
+
+      <!-- 요약 지표 (2단계 .stats / .stat 패턴 재사용) -->
+      <section class="stats stats--wide" aria-label="전체 요약">
+        <div class="card stat">
+          <span class="stat__label">전체 메뉴</span>
+          <strong class="stat__value" data-stat="menus">0</strong>
+        </div>
+        <div class="card stat">
+          <span class="stat__label">품절 메뉴</span>
+          <strong class="stat__value" data-stat="soldout">0</strong>
+        </div>
+        <div class="card stat">
+          <span class="stat__label">전체 주문</span>
+          <strong class="stat__value" data-stat="orders">0</strong>
+        </div>
+        <div class="card stat">
+          <span class="stat__label">총 매출 <em>(취소 제외)</em></span>
+          <strong class="stat__value stat__value--accent" data-stat="revenue">0원</strong>
+        </div>
+      </section>
+
+      <!-- 상태별 주문 수 (index.js 가 렌더 — 상태 칩이 필요해 JS 에서 그린다) -->
+      <section class="section">
+        <h2 class="section__title">상태별 주문</h2>
+        <div class="stats stats--wide" data-status-stats aria-label="상태별 주문 수">
+          <!-- index.js 가 렌더 -->
+        </div>
+      </section>
+
+      <!-- 최근 주문 + 바로가기 -->
+      <div class="dash-layout">
+        <section class="card recent">
+          <div class="recent__head">
+            <h2 class="section__title">최근 주문</h2>
+            <a class="btn btn--ghost btn--sm" href="./orders/list.html">전체 보기 →</a>
+          </div>
+          <div data-recent aria-live="polite">
+            <!-- index.js 가 렌더 -->
+          </div>
+        </section>
+
+        <section class="shortcuts">
+          <a class="card shortcut" href="./menus/list.html">
+            <span class="shortcut__icon" aria-hidden="true">🍹</span>
+            <span class="shortcut__body">
+              <strong class="shortcut__title">메뉴 관리</strong>
+              <span class="shortcut__desc">메뉴를 더하고 덜어냅니다</span>
+            </span>
+          </a>
+          <a class="card shortcut" href="./orders/list.html">
+            <span class="shortcut__icon" aria-hidden="true">🧾</span>
+            <span class="shortcut__body">
+              <strong class="shortcut__title">주문 관리</strong>
+              <span class="shortcut__desc">접수된 주문을 처리합니다</span>
+            </span>
+          </a>
+          <a class="card shortcut" href="./menus/create.html">
+            <span class="shortcut__icon" aria-hidden="true">＋</span>
+            <span class="shortcut__body">
+              <strong class="shortcut__title">새 메뉴 띄우기</strong>
+              <span class="shortcut__desc">새로운 한 잔을 등록합니다</span>
+            </span>
+          </a>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

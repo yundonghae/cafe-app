@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>주문 상세 · 동해 카페 관리자</title>
+
+    <!-- 1단계 공유 자원 (전역 변수 · 리셋 · 공통 컴포넌트) -->
+    <link rel="stylesheet" href="../../css/variables.css" />
+    <!-- 이 페이지 전용 스타일 -->
+    <link rel="stylesheet" href="./detail.css" />
+
+    <!-- defer 는 순서를 보장한다: data.js → utils.js → 페이지 스크립트 -->
+    <script defer src="../../js/data.js"></script>
+    <script defer src="../../js/utils.js"></script>
+    <script defer src="./detail.js"></script>
+  </head>
+  <body>
+    <!-- 상단 관리자 헤더 (2단계 .admin-top 을 그대로 복사, 내비 링크만 3개로 확장) -->
+    <header class="admin-top">
+      <div class="container admin-top__inner">
+        <a class="admin-top__brand" href="../index.html">
+          🌊 동해 카페 <span>관리자</span>
+        </a>
+        <nav class="admin-top__nav">
+          <a class="btn btn--ghost" href="../index.html">대시보드</a>
+          <a class="btn btn--ghost" href="../menus/list.html">메뉴 관리</a>
+          <a class="btn btn--ghost" href="./list.html" aria-current="page">주문 관리</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- 페이지 제목 -->
+      <div class="page-head">
+        <div>
+          <p class="breadcrumb">관리자 · 주문 상세</p>
+          <h1 class="page-head__title">주문 상세</h1>
+          <p class="page-head__sub">
+            주문 내역을 확인하고 제조 상태를 바꿉니다.
+          </p>
+        </div>
+        <a class="btn btn--outline" href="./list.html">← 주문 목록</a>
+      </div>
+
+      <!-- 주문 상세 전체를 detail.js 가 렌더한다 (못 찾으면 .empty-state) -->
+      <section data-detail aria-live="polite">
+        <!-- detail.js 가 렌더 -->
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,329 @@
+/* ============================================
+   🌊 관리자 - 대시보드 (index.html)
+   색상·간격·타이포는 모두 variables.css 의 변수만 사용한다.
+   새 hex 색상 코드는 단 하나도 정의하지 않는다.
+
+   .admin-top / .page-head / .stats 블록은 2단계(admin/menus/list.css)에서
+   그대로 가져온 것이다. 코로케이션 원칙 때문에 생긴 의도적 중복이며,
+   공용화 리팩터링은 별도 작업으로 처리한다.
+   ============================================ */
+
+/* --- 상단 관리자 헤더 (심해 그라데이션) --- */
+.admin-top {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  background: var(--grad-ocean);
+  color: var(--foam);
+  box-shadow: var(--shadow-md);
+}
+
+.admin-top__inner {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.admin-top__brand {
+  font-weight: 700;
+  font-size: var(--fs-lg);
+  color: var(--foam);
+}
+
+/* "관리자" 뱃지 — 유리 질감 */
+.admin-top__brand span {
+  margin-left: var(--space-xs);
+  padding: 0.1rem 0.5rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg-deep);
+  font-size: var(--fs-xs);
+  vertical-align: middle;
+}
+
+.admin-top__nav {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+/* 어두운 헤더 위에서는 버튼 색을 거품색으로 반전 */
+.admin-top__nav .btn {
+  color: var(--foam);
+}
+
+.admin-top__nav .btn--ghost:hover {
+  background: var(--glass-bg-deep);
+  color: var(--foam);
+}
+
+.admin-top__nav .btn--outline {
+  background: var(--glass-bg-deep);
+  border-color: var(--glass-border);
+}
+
+.admin-top__nav .btn--outline:hover {
+  color: var(--sea-sky);
+  border-color: var(--sea-sky);
+}
+
+/* --- 페이지 제목 --- */
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin: var(--space-xl) 0 var(--space-lg);
+}
+
+.breadcrumb {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--color-accent);
+  letter-spacing: 0.02em;
+}
+
+.page-head__title {
+  font-size: var(--fs-2xl);
+  margin-top: var(--space-xs);
+}
+
+.page-head__sub {
+  margin-top: var(--space-xs);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+/* --- 요약 지표 --- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.stat {
+  padding: var(--space-md) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.stat__label {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.stat__value {
+  font-size: var(--fs-xl);
+  color: var(--sea-navy);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================
+   대시보드 전용 확장
+   ============================================ */
+
+/* 지표가 3개보다 많으므로 칸을 자동으로 접는다 (.stats 는 재정의하지 않는다) */
+.stats--wide {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+/* 통계 카드가 hover 마다 들썩이지 않도록 .card 의 이동 효과만 끈다 */
+.stat:hover,
+.recent:hover {
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+
+/* "(취소 제외)" 같은 보조 문구 */
+.stat__label em {
+  font-style: normal;
+  font-size: var(--fs-xs);
+  opacity: 0.75;
+}
+
+/* 매출은 코발트빛으로 강조 */
+.stat__value--accent {
+  color: var(--sea-cobalt);
+}
+
+/* 상태별 카드 — 라벨 자리에 상태 칩이 들어간다 */
+.stat__chip {
+  display: flex;
+}
+
+.section {
+  margin-bottom: var(--space-lg);
+}
+
+.section__title {
+  font-size: var(--fs-lg);
+  margin-bottom: var(--space-md);
+}
+
+/* ============================================
+   최근 주문 + 바로가기
+   ============================================ */
+
+.dash-layout {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  align-items: start;
+  gap: var(--space-lg);
+  padding-bottom: var(--space-2xl);
+}
+
+.recent {
+  padding: var(--space-lg);
+}
+
+.recent__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.recent__head .section__title {
+  margin-bottom: 0;
+}
+
+.recent__head .btn {
+  color: var(--color-accent);
+}
+
+.recent__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* 주문 한 줄 — 카드 안의 카드라서 .card 대신 옅은 배경만 쓴다 */
+.recent-item {
+  display: block;
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.recent-item:hover {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.recent-item__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.recent-item__id {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--sea-navy);
+  font-variant-numeric: tabular-nums;
+}
+
+.recent-item__bottom {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.recent-item__date {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+.recent-item__total {
+  font-size: var(--fs-md);
+  font-weight: 700;
+  color: var(--sea-cobalt);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 카드 안에 들어가는 빈 상태는 여백을 줄인다 */
+.recent .empty-state {
+  padding: var(--space-lg) var(--space-sm);
+}
+
+.recent .empty-state__icon {
+  font-size: var(--fs-2xl);
+  margin-bottom: var(--space-sm);
+}
+
+/* --- 바로가기 카드 --- */
+.shortcuts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.shortcut {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+}
+
+.shortcut__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: none;
+  border-radius: var(--radius-full);
+  background: var(--grad-surface);
+  font-size: var(--fs-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.shortcut__body {
+  display: flex;
+  flex-direction: column;
+}
+
+.shortcut__title {
+  font-size: var(--fs-md);
+  color: var(--sea-navy);
+}
+
+.shortcut__desc {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+/* ============================================
+   반응형
+   ============================================ */
+
+@media (max-width: 900px) {
+  .dash-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  /* 상태 카드는 두 칸까지는 나란히 둔다 */
+  .stats--wide {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .page-head {
+    align-items: flex-start;
+  }
+}

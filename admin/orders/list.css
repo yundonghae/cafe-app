@@ -1,0 +1,224 @@
+/* ============================================
+   🌊 관리자 - 주문 목록 (list.html)
+   색상·간격·타이포는 모두 variables.css 의 변수만 사용한다.
+   새 hex 색상 코드는 단 하나도 정의하지 않는다.
+
+   .admin-top / .page-head / .toolbar / .filter--on 블록은
+   2단계(admin/menus/list.css)에서 그대로 가져온 것이다.
+   코로케이션 원칙 때문에 생긴 의도적 중복이며, 공용화는 별도 작업으로 처리한다.
+   ============================================ */
+
+/* --- 상단 관리자 헤더 (심해 그라데이션) --- */
+.admin-top {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  background: var(--grad-ocean);
+  color: var(--foam);
+  box-shadow: var(--shadow-md);
+}
+
+.admin-top__inner {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.admin-top__brand {
+  font-weight: 700;
+  font-size: var(--fs-lg);
+  color: var(--foam);
+}
+
+/* "관리자" 뱃지 — 유리 질감 */
+.admin-top__brand span {
+  margin-left: var(--space-xs);
+  padding: 0.1rem 0.5rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg-deep);
+  font-size: var(--fs-xs);
+  vertical-align: middle;
+}
+
+.admin-top__nav {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+/* 어두운 헤더 위에서는 버튼 색을 거품색으로 반전 */
+.admin-top__nav .btn {
+  color: var(--foam);
+}
+
+.admin-top__nav .btn--ghost:hover {
+  background: var(--glass-bg-deep);
+  color: var(--foam);
+}
+
+.admin-top__nav .btn--outline {
+  background: var(--glass-bg-deep);
+  border-color: var(--glass-border);
+}
+
+.admin-top__nav .btn--outline:hover {
+  color: var(--sea-sky);
+  border-color: var(--sea-sky);
+}
+
+/* --- 페이지 제목 --- */
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin: var(--space-xl) 0 var(--space-lg);
+}
+
+.breadcrumb {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--color-accent);
+  letter-spacing: 0.02em;
+}
+
+.page-head__title {
+  font-size: var(--fs-2xl);
+  margin-top: var(--space-xs);
+}
+
+.page-head__sub {
+  margin-top: var(--space-xs);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+/* --- 필터 툴바 --- */
+.toolbar {
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-lg);
+}
+
+.toolbar__filters {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+/* 선택된 필터 버튼 — 수면 그라데이션으로 강조 */
+.filter--on {
+  background: var(--grad-ocean);
+  color: var(--foam);
+  border-color: transparent;
+}
+
+.filter--on:hover {
+  color: var(--foam);
+  border-color: transparent;
+}
+
+/* ============================================
+   주문 목록 (표)
+   ============================================ */
+
+.orders {
+  padding: var(--space-sm) var(--space-lg) var(--space-lg);
+  margin-bottom: var(--space-2xl);
+}
+
+/* 큰 표 패널이 hover 마다 들썩이지 않도록 .card 의 이동 효과만 끈다 */
+.orders:hover {
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+
+/* 좁은 화면에서는 표가 가로로 스크롤된다 */
+.orders__scroll {
+  overflow-x: auto;
+}
+
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+}
+
+.order-table th,
+.order-table td {
+  padding: var(--space-md) var(--space-sm);
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.order-table thead th {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  border-bottom: 1.5px solid var(--color-border);
+}
+
+/* 금액 열은 오른쪽 정렬 */
+.order-table__amount {
+  text-align: right;
+  font-weight: 700;
+  color: var(--sea-cobalt);
+  font-variant-numeric: tabular-nums;
+}
+
+.order-table__id {
+  font-weight: 700;
+  color: var(--sea-navy);
+  font-variant-numeric: tabular-nums;
+}
+
+.order-table__id a:hover {
+  color: var(--color-accent);
+}
+
+.order-table__date {
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 취소된 주문은 흐리게 (한눈에 구분) */
+.order-row--canceled .order-table__id,
+.order-row--canceled .order-table__amount {
+  color: var(--color-text-muted);
+}
+
+/* 동작 열 — 다음 상태 버튼 + 상세 링크 */
+.order-table__actions {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: flex-end;
+}
+
+/* 더 넘길 상태가 없을 때의 자리 표시 */
+.order-table__done {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+/* ============================================
+   반응형
+   ============================================ */
+
+@media (max-width: 720px) {
+  .page-head {
+    align-items: flex-start;
+  }
+
+  .orders {
+    padding: var(--space-sm) var(--space-md) var(--space-md);
+  }
+}
