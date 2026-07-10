@@ -231,14 +231,51 @@ cafe-app/
 > ⚠️ 헤더 내비에 **마이페이지 링크도 아직 없다.** `my/` 는 현재 직접 주소로만 진입한다.
 > 헤더 내비 확장(주문 내역 + 마이페이지)은 **8단계에서 `.site-header` 공용화와 함께 처리**할 것.
 
-### 8단계: 관리자 - 대시보드 & 주문 관리
+### 8단계: 관리자 - 대시보드 & 주문 관리 ✅
 
-- [ ] `admin/index.html` — 대시보드
-- [ ] `admin/index.css`
-- [ ] `admin/index.js`
-- [ ] `admin/orders/list.html` — 주문 목록
-- [ ] `admin/orders/list.css`
-- [ ] `admin/orders/list.js`
-- [ ] `admin/orders/detail.html` — 주문 상세
-- [ ] `admin/orders/detail.css`
-- [ ] `admin/orders/detail.js`
+- [x] `admin/index.html` — 대시보드 (요약 지표 · 상태별 주문 · 최근 주문 · 바로가기)
+- [x] `admin/index.css`
+- [x] `admin/index.js`
+- [x] `admin/orders/list.html` — 주문 목록 (상태 필터 · 행에서 다음 상태로 전환)
+- [x] `admin/orders/list.css`
+- [x] `admin/orders/list.js`
+- [x] `admin/orders/detail.html` — 주문 상세 (메뉴 표 · 상태 전이 컨트롤)
+- [x] `admin/orders/detail.css`
+- [x] `admin/orders/detail.js`
+
+> **상태 전이는 페이지가 책임진다.** `updateOrderStatus()` 는 아무 문자열이나 받아 그대로 저장하므로
+> (검증 로직이 없다) 허용 전이를 각 페이지의 상수로 명시한다:
+> `pending → making|canceled`, `making → done|canceled`, `done`·`canceled` 는 종착 상태.
+> 목록은 정방향(`pending→making→done`)만, 상세는 취소까지 제공한다.
+> 클릭 시점에 `getOrderById()` 로 상태를 **다시 읽어** 판정하므로,
+> 다른 탭에서 먼저 바뀐 주문을 잘못된 상태로 덮어쓰지 않는다.
+> 취소는 되돌릴 수 없어 `confirm()` 후 실행한다.
+>
+> 대시보드의 총 매출은 `canceled` 를 뺀 주문의 `total` 합계다 (= 접수 대기 + 제조 중 + 완료).
+> 상태별 건수는 `ORDER_STATUS` 의 키를 순회해 만들므로 상태가 늘어도 코드를 고칠 필요가 없다.
+>
+> 관리자 헤더 `.admin-top` 은 2단계 것을 그대로 복사했고, 내비만 3링크
+> (대시보드 · 메뉴 관리 · 주문 관리)로 확장했다.
+> ⚠️ **`admin/menus/*.html` 4개 파일의 내비는 아직 2링크(메뉴 관리 · 메뉴 추가)** 라
+> 거기서는 대시보드·주문 관리로 갈 수 없다. 아래 후속 작업 참고.
+
+---
+
+## 🔭 후속 작업 (청사진 8단계 이후)
+
+구현하며 쌓인 **의도된 부채**를 한곳에 모아 둔다. 모두 기능 결함이 아니라 일관성 문제다.
+
+- [ ] **헤더 공용화** — `.site-header`(고객 6페이지)와 `.admin-top`(관리자 7페이지)이
+      각 CSS 에 인라인 복붙되어 있다. 코로케이션 원칙과 충돌하므로 공용화 여부를 결정할 것.
+- [ ] **고객 헤더 내비 확장** — 주문 내역(`orders/list.html`)·마이페이지(`my/index.html`)
+      링크가 없다. `my/` 는 현재 주소를 직접 쳐야만 진입한다.
+- [ ] **관리자 메뉴 페이지 내비 확장** — `admin/menus/*.html` 4개에 대시보드·주문 관리 링크 추가.
+- [ ] **`getCartCount()` 불일치** — 배지를 채우는 `getCartCount()` 는 원본 카트를 세지만
+      `getCartDetail()` 은 삭제된 메뉴를 걸러낸다. 담긴 메뉴가 삭제되면
+      **배지 숫자가 장바구니 목록보다 크게** 표시된다. (`utils.js` 수정이 필요해 미착수)
+- [ ] **`checkout()` 주문 id 충돌** — id 를 `"o-" + Date.now().toString(36)` 로만 만들어
+      **같은 밀리초에 만든 두 주문이 같은 id 를 갖는다.** 그러면 `getOrderById()` 가 항상
+      첫 주문만 반환해 주문 상세가 엉뚱한 주문을 보여 준다.
+      사람이 1ms 안에 두 번 결제할 수는 없어 실사용 위험은 낮지만, 자동화·테스트·이중 클릭에서 재현된다.
+      해결: 카운터나 난수를 덧붙여 `"o-" + Date.now().toString(36) + "-" + (seq++)` 형태로.
+      (`utils.js` 수정이 필요해 미착수)
