@@ -12,10 +12,9 @@
 (function () {
 const KEYS = window.CafeData.STORAGE_KEYS;
 
-/* ⚠️ 실수 방지용 UX 장치일 뿐, 진짜 보안이 아니다.
-   이 JS 는 브라우저에 그대로 노출되므로 아래 키 값도 누구나 소스에서 볼 수 있다.
-   손님이 관리자 화면에 "실수로" 들어가는 것을 막는 용도로만 쓴다. */
-const ADMIN_KEY = "eastsea2026";
+/* 참고: 관리자 진입 키 확인은 대시보드(admin/index.js) 한 곳에서만 한다.
+   손님 페이지의 🔐 링크는 그냥 admin/index.html 로 이동만 하고,
+   그 페이지가 로드될 때 키를 물어본다. (utils 에는 관련 로직을 두지 않는다) */
 
 /* ============================================
    포맷
@@ -273,35 +272,6 @@ function statusChipHtml(status) {
 }
 
 /* ============================================
-   관리자 진입 (간단한 실수 방지 장치)
-   ⚠️ 다시 강조: 진짜 인증이 아니다. localStorage 플래그와 소스에 박힌 키로
-   손님이 관리자 화면에 잘못 들어가는 것을 막을 뿐, 마음먹은 사람은 우회할 수 있다.
-   ============================================ */
-
-/**
- * 관리자 페이지로 이동을 시도한다.
- * - 이미 인증된 세션("cafe.isAdmin" === "true")이면 바로 이동한다.
- * - 아니면 관리자 키를 물어, 맞으면 플래그를 세우고 이동, 틀리면 토스트만 띄우고 멈춘다.
- * @param {string} destinationPath 관리자 폴더로 가는 (호출 파일 기준) 상대경로
- */
-function checkAdminAccess(destinationPath) {
-  // "cafe.isAdmin" 은 data.js 의 STORAGE_KEYS 에 없는 키라 리터럴로 직접 쓴다
-  // (data.js 는 수정 금지 파일이므로 KEYS 에 추가하지 않는다)
-  if (localStorage.getItem("cafe.isAdmin") === "true") {
-    location.href = destinationPath;
-    return;
-  }
-  const input = prompt("관리자 키를 입력하세요");
-  if (input === null) return; // 취소한 경우 아무 동작도 하지 않는다
-  if (input === ADMIN_KEY) {
-    localStorage.setItem("cafe.isAdmin", "true");
-    location.href = destinationPath;
-  } else {
-    showToast("관리자 키가 올바르지 않습니다.", "danger");
-  }
-}
-
-/* ============================================
    전역 노출
    ============================================ */
 
@@ -335,8 +305,6 @@ window.CafeUtils = {
   // 사용자
   getUser,
   saveUser,
-  // 관리자 진입 (간단한 실수 방지 장치)
-  checkAdminAccess,
   // 컴포넌트
   qtyStepperHtml,
   statusChipHtml,

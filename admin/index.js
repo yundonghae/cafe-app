@@ -121,20 +121,22 @@
      초기화
      ============================================ */
 
-  /* 🔐 간단한 진입 제한 (실수 방지용 UX — 진짜 보안이 아니다).
-     🔐 버튼(checkAdminAccess)을 거치지 않고 주소창에 직접 admin/index.html 을
-     친 경우를 대비해, 대시보드를 그리기 전에 관리자 여부를 한 번 더 확인한다.
-     하위 관리자 페이지까지 매번 묻지 않도록, 이 대시보드 진입 시점에서만 검사한다. */
-  if (localStorage.getItem("cafe.isAdmin") !== "true") {
-    // 키가 맞으면 이 페이지로 재진입(리로드)하고, 틀리면 checkAdminAccess 가 토스트만 띄운다.
-    // 키를 utils.js 한 곳에만 두기 위해 여기서 직접 비교하지 않고 checkAdminAccess 를 재사용한다.
-    window.CafeUtils.checkAdminAccess("index.html");
-    // 리로드가 걸리지 않았다면(취소·오답) 여전히 비인가 상태이므로 손님 홈으로 돌려보낸다.
-    if (localStorage.getItem("cafe.isAdmin") !== "true") {
-      location.href = "../index.html";
+  /* 🔐 관리자 진입 관문 — 이 대시보드 한 곳뿐이다 (실수 방지용 UX, 진짜 보안 아님).
+     손님 페이지의 🔐 링크도, 주소창 직접 접근도 결국 여기로 오고,
+     이 페이지가 로드될 때마다 키를 물어본다. 그래서 프롬프트는 진입당 딱 한 번이다.
+     인증 상태를 어디에도 저장하지 않으므로, 새로고침하거나 다시 들어오면 그때마다 다시 묻는다.
+     하위 관리자 페이지(메뉴·주문)는 검사하지 않아, 한 번 들어온 뒤에는 자유롭게 오간다.
+     ⚠️ 아래 키는 소스에 그대로 노출되는 비밀 아닌 값이다. */
+  const adminKey = prompt("관리자 키를 입력하세요");
+  if (adminKey !== "eastsea2026") {
+    // 취소(null)면 조용히, 오답이면 안내만 하고 — 어느 쪽이든 손님 홈으로 돌려보낸다
+    if (adminKey !== null) {
+      window.CafeUtils.showToast("관리자 키가 올바르지 않습니다.", "danger");
     }
-    return; // 어느 쪽이든 이번 로드에서는 대시보드를 그리지 않는다
+    location.href = "../index.html";
+    return; // 대시보드를 그리지 않는다
   }
+  // 키가 맞으면 이동/리로드 없이 그대로 대시보드를 그린다
 
   // 다른 관리자 페이지가 남긴 안내 메시지를 이어받아 표시한다
   const flash = sessionStorage.getItem("cafe.flash");

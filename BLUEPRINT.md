@@ -271,12 +271,17 @@ cafe-app/
       - 관리자 7페이지 `.admin-top__nav` 에 구분선 + `btn--outline` "손님 페이지 보기"(→ 루트 `index.html`).
       - 고객 7페이지 `.site-header__nav` 장바구니 왼쪽에 `🔐 관리자` 버튼(`btn--ghost btn--sm`).
         `href` 대신 `onclick="CafeUtils.checkAdminAccess('…/admin/index.html')"` 로 키를 먼저 확인한다.
-      - `utils.js` 에 **새 함수** `checkAdminAccess(destinationPath)` 추가(기존 함수는 무수정):
-        `localStorage["cafe.isAdmin"]==="true"` 면 바로 이동, 아니면 `prompt` → 키가 `ADMIN_KEY`(파일 상단 상수)
-        와 맞으면 플래그 저장 후 이동, 틀리면 토스트만.
+      - `utils.js` 에 **새 함수** `checkAdminAccess(destinationPath)` 추가(기존 함수는 무수정).
       - `admin/index.js` 초기화 최상단에서 비인가 직접 접근을 한 번 더 검사(대시보드 진입 시점에서만).
       - ⚠️ **진짜 보안이 아니다.** JS·키(`eastsea2026`)가 소스에 그대로 노출되므로 우회 가능.
         손님이 관리자 화면에 **실수로** 들어가는 것을 막는 UX 장치일 뿐이다. (코드 주석에도 명시)
+- [x] **관리자 진입 관문을 대시보드 하나로 통일 (진입당 딱 한 번, 새로고침 시 다시 물음)** —
+      키 확인을 `admin/index.js` 가드 **한 곳**에서만 한다. 손님 페이지의 🔐 는 이제 `checkAdminAccess`
+      호출 버튼이 아니라 그냥 `admin/index.html` 로 가는 `<a>` 링크이고, 도착한 대시보드가 로드될 때
+      키를 묻는다. 그래서 진입당 프롬프트는 한 번뿐이고(이전의 버튼+가드 이중 프롬프트 해소),
+      인증 상태를 어디에도 저장하지 않으므로 **새로고침·재진입 때마다 다시 묻는다.**
+      호출자가 사라진 `checkAdminAccess()` 와 `ADMIN_KEY` 상수는 `utils.js` 에서 제거했다
+      (키는 이제 가드가 있는 `admin/index.js` 한 곳에만 리터럴로 존재). 저장 상태 전혀 없음.
 - [x] **고객 헤더 내비 확장** — 고객 7페이지 모두 `홈 · 메뉴 · 마이페이지 · 주문내역 · 🧺` 로 통일.
       (`my/index.html` 포함 — 자기 자신에는 `aria-current="page"` 부여)
 - [x] **관리자 메뉴 페이지 내비 확장** — `admin/menus/*.html` 4개를

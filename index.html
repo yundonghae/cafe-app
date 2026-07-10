@@ -34,15 +34,10 @@
           <a class="btn btn--ghost" href="my/index.html">마이페이지</a>
           <a class="btn btn--ghost" href="orders/list.html">주문내역</a>
 
-          <!-- 관리자 진입: href 로 바로 가지 않고 CafeUtils.checkAdminAccess 로 키를 확인한다 -->
-          <button
-            class="btn btn--ghost btn--sm"
-            type="button"
-            title="관리자 페이지"
-            onclick="CafeUtils.checkAdminAccess('admin/index.html')"
-          >
+          <!-- 관리자 진입: 대시보드가 로드될 때 키를 물으므로 여기서는 이동만 한다 -->
+          <a class="btn btn--ghost btn--sm" href="admin/index.html" title="관리자 페이지">
             🔐 관리자
-          </button>
+          </a>
 
           <!-- 장바구니: data-cart-badge 는 CafeUtils.updateCartBadges 가 자동으로 채운다 -->
           <a class="site-header__cart" href="basket/list.html">
