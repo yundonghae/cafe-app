@@ -265,8 +265,18 @@ cafe-app/
 
 구현하며 쌓인 **의도된 부채**를 한곳에 모아 둔다. 모두 기능 결함이 아니라 일관성 문제다.
 
-- [ ] **헤더 공용화** — `.site-header`(고객 6페이지)와 `.admin-top`(관리자 7페이지)이
+- [ ] **헤더 공용화** — `.site-header`(고객 7페이지)와 `.admin-top`(관리자 7페이지)이
       각 CSS 에 인라인 복붙되어 있다. 코로케이션 원칙과 충돌하므로 공용화 여부를 결정할 것.
+- [x] **페이지 간 이동 + 간단 관리자 진입 제한** — 관리자↔손님 왕복 링크와 🔐 키 게이트 추가.
+      - 관리자 7페이지 `.admin-top__nav` 에 구분선 + `btn--outline` "손님 페이지 보기"(→ 루트 `index.html`).
+      - 고객 7페이지 `.site-header__nav` 장바구니 왼쪽에 `🔐 관리자` 버튼(`btn--ghost btn--sm`).
+        `href` 대신 `onclick="CafeUtils.checkAdminAccess('…/admin/index.html')"` 로 키를 먼저 확인한다.
+      - `utils.js` 에 **새 함수** `checkAdminAccess(destinationPath)` 추가(기존 함수는 무수정):
+        `localStorage["cafe.isAdmin"]==="true"` 면 바로 이동, 아니면 `prompt` → 키가 `ADMIN_KEY`(파일 상단 상수)
+        와 맞으면 플래그 저장 후 이동, 틀리면 토스트만.
+      - `admin/index.js` 초기화 최상단에서 비인가 직접 접근을 한 번 더 검사(대시보드 진입 시점에서만).
+      - ⚠️ **진짜 보안이 아니다.** JS·키(`eastsea2026`)가 소스에 그대로 노출되므로 우회 가능.
+        손님이 관리자 화면에 **실수로** 들어가는 것을 막는 UX 장치일 뿐이다. (코드 주석에도 명시)
 - [x] **고객 헤더 내비 확장** — 고객 7페이지 모두 `홈 · 메뉴 · 마이페이지 · 주문내역 · 🧺` 로 통일.
       (`my/index.html` 포함 — 자기 자신에는 `aria-current="page"` 부여)
 - [x] **관리자 메뉴 페이지 내비 확장** — `admin/menus/*.html` 4개를
@@ -276,9 +286,7 @@ cafe-app/
 - [x] **`getCartCount()` 불일치** — 배지를 채우는 `getCartCount()` 가 원본 카트를 세서
       삭제된 메뉴가 담겨 있으면 배지 숫자가 장바구니 목록보다 크게 나왔다.
       `getCartDetail().count`(이미 삭제 메뉴를 걸러낸 값)를 반환하도록 고쳐 두 경로를 일치시켰다.
-- [ ] **`checkout()` 주문 id 충돌** — id 를 `"o-" + Date.now().toString(36)` 로만 만들어
-      **같은 밀리초에 만든 두 주문이 같은 id 를 갖는다.** 그러면 `getOrderById()` 가 항상
-      첫 주문만 반환해 주문 상세가 엉뚱한 주문을 보여 준다.
-      사람이 1ms 안에 두 번 결제할 수는 없어 실사용 위험은 낮지만, 자동화·테스트·이중 클릭에서 재현된다.
-      해결: 카운터나 난수를 덧붙여 `"o-" + Date.now().toString(36) + "-" + (seq++)` 형태로.
-      (`utils.js` 수정이 필요해 미착수)
+- [x] **`checkout()` 주문 id 충돌** — id 를 `"o-" + Date.now().toString(36)` 로만 만들어
+      같은 밀리초에 만든 두 주문이 같은 id 를 갖고, `getOrderById()` 가 첫 주문만 반환하는 문제가 있었다.
+      IIFE 스코프의 순차 카운터 `orderSeq` 를 붙여
+      `"o-" + Date.now().toString(36) + "-" + orderSeq++` 형태로 바꿔 세션 내 유일성을 보장했다.

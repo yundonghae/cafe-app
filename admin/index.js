@@ -121,6 +121,21 @@
      초기화
      ============================================ */
 
+  /* 🔐 간단한 진입 제한 (실수 방지용 UX — 진짜 보안이 아니다).
+     🔐 버튼(checkAdminAccess)을 거치지 않고 주소창에 직접 admin/index.html 을
+     친 경우를 대비해, 대시보드를 그리기 전에 관리자 여부를 한 번 더 확인한다.
+     하위 관리자 페이지까지 매번 묻지 않도록, 이 대시보드 진입 시점에서만 검사한다. */
+  if (localStorage.getItem("cafe.isAdmin") !== "true") {
+    // 키가 맞으면 이 페이지로 재진입(리로드)하고, 틀리면 checkAdminAccess 가 토스트만 띄운다.
+    // 키를 utils.js 한 곳에만 두기 위해 여기서 직접 비교하지 않고 checkAdminAccess 를 재사용한다.
+    window.CafeUtils.checkAdminAccess("index.html");
+    // 리로드가 걸리지 않았다면(취소·오답) 여전히 비인가 상태이므로 손님 홈으로 돌려보낸다.
+    if (localStorage.getItem("cafe.isAdmin") !== "true") {
+      location.href = "../index.html";
+    }
+    return; // 어느 쪽이든 이번 로드에서는 대시보드를 그리지 않는다
+  }
+
   // 다른 관리자 페이지가 남긴 안내 메시지를 이어받아 표시한다
   const flash = sessionStorage.getItem("cafe.flash");
   if (flash) {
