@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>마이페이지 · 동해 카페</title>
+
+    <!-- 1단계 공유 자원 (전역 변수 · 리셋 · 공통 컴포넌트) -->
+    <link rel="stylesheet" href="../css/variables.css" />
+    <!-- 이 페이지 전용 스타일 -->
+    <link rel="stylesheet" href="./index.css" />
+
+    <!-- defer 는 순서를 보장한다: data.js → utils.js → 페이지 스크립트 -->
+    <script defer src="../js/data.js"></script>
+    <script defer src="../js/utils.js"></script>
+    <script defer src="./index.js"></script>
+  </head>
+  <body>
+    <!-- 고객용 헤더 — 3~6단계의 .site-header 를 그대로 재사용 -->
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a class="site-header__logo" href="../index.html">🌊 동해 카페</a>
+
+        <nav class="site-header__nav">
+          <a class="btn btn--ghost" href="../index.html">홈</a>
+          <a class="btn btn--ghost" href="../menus/list.html">메뉴</a>
+
+          <!-- 장바구니: data-cart-badge 는 CafeUtils.updateCartBadges 가 자동으로 채운다 -->
+          <a class="site-header__cart" href="../basket/list.html">
+            <span aria-hidden="true">🧺</span>
+            <span class="sr-only">장바구니</span>
+            <span class="site-header__cart-count" data-cart-badge hidden>0</span>
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- 페이지 제목 (2~6단계 page-head 패턴 재사용) -->
+      <div class="page-head">
+        <div>
+          <p class="breadcrumb">동해 카페 · 마이페이지</p>
+          <h1 class="page-head__title">나의 바다</h1>
+          <p class="page-head__sub">
+            모아 둔 포인트와 스탬프, 그리고 지나간 주문을 확인하세요.
+          </p>
+        </div>
+      </div>
+
+      <div class="my-layout">
+        <!-- 왼쪽: 프로필 · 이름 수정 -->
+        <div class="my-main">
+          <!-- 프로필 카드 (index.js 가 렌더) -->
+          <section data-profile aria-live="polite">
+            <!-- index.js 가 렌더 -->
+          </section>
+
+          <!-- 이름 수정 폼 -->
+          <section class="card name-form">
+            <h2 class="section-title">이름 바꾸기</h2>
+            <p class="section-desc">주문할 때 불러 드릴 이름입니다.</p>
+
+            <!-- novalidate 없이 기본 검증을 쓰되, 최종 확인은 JS 에서 한 번 더 한다 -->
+            <form class="name-form__row" data-name-form>
+              <div class="field name-form__field">
+                <label class="sr-only" for="name">이름</label>
+                <input
+                  class="input"
+                  id="name"
+                  name="name"
+                  type="text"
+                  data-name-input
+                  maxlength="20"
+                  placeholder="이름을 입력하세요"
+                  autocomplete="nickname"
+                  required
+                />
+              </div>
+              <button class="btn btn--primary" type="submit">저장</button>
+            </form>
+          </section>
+        </div>
+
+        <!-- 오른쪽: 최근 주문 · 바로가기 -->
+        <div class="my-side">
+          <!-- 최근 주문 미리보기 (index.js 가 렌더) -->
+          <section class="card recent" aria-live="polite">
+            <div class="recent__head">
+              <h2 class="section-title">최근 주문</h2>
+              <a class="btn btn--ghost btn--sm" href="../orders/list.html">전체 보기 →</a>
+            </div>
+            <div data-recent>
+              <!-- index.js 가 렌더 -->
+            </div>
+          </section>
+
+          <!-- 바로가기 -->
+          <section class="card shortcuts">
+            <h2 class="section-title">바로가기</h2>
+            <div class="shortcuts__list">
+              <a class="btn btn--primary btn--block" href="../menus/list.html">
+                ☕ 메뉴 보러가기
+              </a>
+              <a class="btn btn--outline btn--block" href="../basket/list.html">
+                🧺 장바구니
+              </a>
+              <a class="btn btn--outline btn--block" href="../orders/list.html">
+                🧾 주문 내역
+              </a>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

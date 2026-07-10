@@ -1,0 +1,455 @@
+/* ============================================
+   🌊 고객 - 마이페이지 (index.html)
+   색상·간격·타이포는 모두 variables.css 의 변수만 사용한다.
+   새 hex 색상 코드는 단 하나도 정의하지 않는다.
+
+   .site-header / .page-head 블록은 3~6단계에서 그대로 가져온 것이다.
+   코로케이션 원칙 때문에 생긴 의도적 중복이며,
+   BLUEPRINT 의 .admin-top 과 마찬가지로 8단계에서 공용화를 재검토한다.
+   ============================================ */
+
+/* --- 고객용 헤더 (수면 그라데이션) --- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  background: var(--grad-ocean);
+  color: var(--foam);
+  box-shadow: var(--shadow-md);
+}
+
+.site-header__inner {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.site-header__logo {
+  font-weight: 700;
+  font-size: var(--fs-lg);
+  color: var(--foam);
+}
+
+.site-header__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* 어두운 헤더 위에서는 버튼 색을 거품색으로 반전 */
+.site-header__nav .btn {
+  color: var(--foam);
+}
+
+.site-header__nav .btn--ghost:hover {
+  background: var(--glass-bg-deep);
+  color: var(--foam);
+}
+
+/* 장바구니 아이콘 + 수량 배지 */
+.site-header__cart {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-left: var(--space-xs);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg-deep);
+  font-size: var(--fs-lg);
+  transition: box-shadow var(--transition);
+}
+
+.site-header__cart:hover {
+  box-shadow: var(--glow-aqua);
+}
+
+/* 담긴 수량 — 모래빛 원형 배지 */
+.site-header__cart-count {
+  position: absolute;
+  top: -0.3rem;
+  right: -0.3rem;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--sand);
+  color: var(--sea-abyss);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  box-shadow: var(--shadow-sm);
+}
+
+/* hidden 속성이 붙어도 inline-flex 가 이기지 않도록 */
+.site-header__cart-count[hidden] {
+  display: none;
+}
+
+/* --- 페이지 제목 --- */
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin: var(--space-xl) 0 var(--space-lg);
+}
+
+.breadcrumb {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--color-accent);
+  letter-spacing: 0.02em;
+}
+
+.page-head__title {
+  font-size: var(--fs-2xl);
+  margin-top: var(--space-xs);
+}
+
+.page-head__sub {
+  margin-top: var(--space-xs);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+/* ============================================
+   레이아웃 — 왼쪽 프로필 / 오른쪽 주문·바로가기
+   ============================================ */
+
+.my-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  align-items: start;
+  gap: var(--space-lg);
+  padding-bottom: var(--space-2xl);
+}
+
+.my-main,
+.my-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* 섹션 공통 제목 */
+.section-title {
+  font-size: var(--fs-lg);
+}
+
+.section-desc {
+  margin-top: var(--space-xs);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+/* 정보 패널이 hover 마다 들썩이지 않도록 .card 의 이동 효과만 끈다 */
+.profile:hover,
+.name-form:hover,
+.recent:hover,
+.shortcuts:hover {
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ============================================
+   프로필 카드 — 깊은 바다 배경 위의 유리
+   ============================================ */
+
+.profile {
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-xl);
+  background: var(--grad-ocean);
+  border-color: transparent;
+  color: var(--foam);
+}
+
+/* 수면에 빛이 번지는 장식 */
+.profile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 88% 12%, var(--glass-bg-deep), transparent 55%);
+  pointer-events: none;
+}
+
+.profile__inner {
+  position: relative; /* ::before 위로 올린다 */
+  z-index: 1;
+}
+
+.profile__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+/* 물방울 아바타 */
+.profile__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  flex: none;
+  border-radius: var(--radius-full);
+  background: var(--grad-surface);
+  font-size: var(--fs-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.profile__greeting {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.02em;
+  color: var(--sea-sky);
+}
+
+/* 프로필 카드 안의 h2 는 거품색 (기본 h1~h6 색을 덮어쓴다) */
+.profile__name {
+  margin-top: var(--space-xs);
+  font-size: var(--fs-xl);
+  color: var(--foam);
+}
+
+/* --- 포인트 · 스탬프 통계 --- */
+.profile__stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+.stat {
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  background: var(--glass-bg-deep);
+  border: 1px solid var(--glass-border);
+}
+
+.stat__label {
+  font-size: var(--fs-xs);
+  color: var(--sea-sky);
+}
+
+.stat__value {
+  margin-top: var(--space-xs);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  color: var(--foam);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- 스탬프 시각화 --- */
+.stamps {
+  margin-top: var(--space-lg);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  background: var(--glass-bg-deep);
+  border: 1px solid var(--glass-border);
+}
+
+.stamps__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  font-size: var(--fs-xs);
+  color: var(--sea-sky);
+}
+
+.stamps__list {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-top: var(--space-md);
+}
+
+/* 도장 한 칸 — 채워진 칸은 물빛으로 빛난다 */
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-full);
+  border: 1.5px dashed var(--glass-border);
+  font-size: var(--fs-md);
+  line-height: 1;
+}
+
+.stamp--filled {
+  border-style: solid;
+  border-color: transparent;
+  background: var(--grad-surface);
+  box-shadow: var(--glow-aqua);
+}
+
+/* 아직 안 찍힌 칸은 흐리게 */
+.stamp--empty {
+  opacity: 0.45;
+}
+
+.stamps__note {
+  margin-top: var(--space-md);
+  font-size: var(--fs-xs);
+  color: var(--sea-sky);
+}
+
+/* ============================================
+   이름 수정 폼
+   ============================================ */
+
+.name-form {
+  padding: var(--space-lg);
+}
+
+.name-form__row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+}
+
+.name-form__field {
+  flex: 1;
+}
+
+/* ============================================
+   최근 주문 미리보기
+   ============================================ */
+
+.recent {
+  padding: var(--space-lg);
+}
+
+.recent__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.recent__head .btn {
+  color: var(--color-accent);
+}
+
+.recent__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* 주문 한 줄 — 카드 안의 카드라서 .card 대신 옅은 배경만 쓴다 */
+.recent-item {
+  display: block;
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.recent-item:hover {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.recent-item__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.recent-item__id {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--sea-navy);
+  font-variant-numeric: tabular-nums;
+}
+
+.recent-item__bottom {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.recent-item__date {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+.recent-item__total {
+  font-size: var(--fs-md);
+  font-weight: 700;
+  color: var(--sea-cobalt);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 카드 안에 들어가는 빈 상태는 여백을 줄인다 */
+.recent .empty-state {
+  padding: var(--space-lg) var(--space-sm);
+}
+
+.recent .empty-state__icon {
+  font-size: var(--fs-2xl);
+  margin-bottom: var(--space-sm);
+}
+
+/* ============================================
+   바로가기
+   ============================================ */
+
+.shortcuts {
+  padding: var(--space-lg);
+}
+
+.shortcuts__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+}
+
+/* ============================================
+   반응형 — 좁은 화면에서 세로로 쌓는다
+   ============================================ */
+
+@media (max-width: 900px) {
+  .my-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .page-head {
+    align-items: flex-start;
+  }
+
+  .profile {
+    padding: var(--space-lg);
+  }
+
+  /* 포인트/스탬프 통계는 한 줄씩 */
+  .profile__stats {
+    grid-template-columns: 1fr;
+  }
+
+  /* 이름 입력과 저장 버튼을 세로로 */
+  .name-form__row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
