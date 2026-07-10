@@ -169,17 +169,29 @@ cafe-app/
 > 수량은 화면 숫자가 아니라 `getCartDetail()` 의 저장값을 기준으로 계산한다.
 > `updateCartQty()` 는 최소 1로 고정되므로, 1개에서 감소는 삭제 버튼으로 안내한다.
 > `checkout()` 이 `null`(빈 장바구니)이면 아무 동작도 하지 않는다.
-> 주문 성공 시 `sessionStorage` 의 `cafe.flash` 에 메시지를 남기고 메뉴 목록으로 이동한다
-> (5단계 주문 페이지 완성 후 이동 대상을 `orders/detail.html` 로 교체할 것).
+> 주문 성공 시 `sessionStorage` 의 `cafe.flash` 에 메시지를 남기고
+> 방금 만든 주문의 `orders/detail.html?id=...` 로 이동한다 (5단계에서 교체 완료).
 
-### 5단계: 고객 - 주문 관리 시스템
+### 5단계: 고객 - 주문 관리 시스템 ✅
 
-- [ ] `orders/list.html` — 주문 내역 목록
-- [ ] `orders/list.css`
-- [ ] `orders/list.js`
-- [ ] `orders/detail.html` — 주문 상세
-- [ ] `orders/detail.css`
-- [ ] `orders/detail.js`
+- [x] `orders/list.html` — 주문 내역 목록 (상태 칩 · 메뉴 요약 · 총액 · 상세보기)
+- [x] `orders/list.css`
+- [x] `orders/list.js`
+- [x] `orders/detail.html` — 주문 상세 (메뉴 표 · 총액 · 주문 취소)
+- [x] `orders/detail.css`
+- [x] `orders/detail.js`
+
+> `getOrders()` 는 `unshift` 로 저장되어 이미 최신순이므로 페이지에서 다시 정렬하지 않는다.
+> `order.items` 는 주문 시점의 **스냅샷**(`{menuId,name,price,qty}`)이다.
+> 메뉴가 삭제·가격 변경돼도 주문 내역은 그대로 남아야 하므로 `getMenuById()` 로 다시 조인하지 않는다.
+> 같은 이유로 메뉴명은 상세 페이지로 링크하지 않는다 (삭제된 메뉴로 이어질 수 있음).
+> 취소는 `pending`(접수 대기) 주문만 가능하다. 클릭 시점에 상태를 다시 읽어
+> 그 사이 사장님이 `making` 으로 바꿨다면 취소를 거부한다.
+> `cafe.flash` 는 `orders/list.js` 와 `orders/detail.js` 양쪽에서 읽는다.
+>
+> ⚠️ 아직 `.site-header` 내비게이션에 **주문 내역 링크가 없다.** 현재 `orders/` 는
+> 결제 후 리다이렉트로만 진입한다. 헤더는 3·4단계와 동일하게 유지하라는 제약 때문에
+> 건드리지 않았으니, **6단계(메인 페이지)에서 헤더 내비를 함께 확장**할 것.
 
 ### 6단계: 고객 - 메인 페이지
 

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>주문 상세 · 동해 카페</title>
+
+    <!-- 1단계 공유 자원 (전역 변수 · 리셋 · 공통 컴포넌트) -->
+    <link rel="stylesheet" href="../css/variables.css" />
+    <!-- 이 페이지 전용 스타일 -->
+    <link rel="stylesheet" href="./detail.css" />
+
+    <!-- defer 는 순서를 보장한다: data.js → utils.js → 페이지 스크립트 -->
+    <script defer src="../js/data.js"></script>
+    <script defer src="../js/utils.js"></script>
+    <script defer src="./detail.js"></script>
+  </head>
+  <body>
+    <!-- 고객용 헤더 — 3·4단계의 .site-header 를 그대로 재사용 (경로만 이 폴더 기준으로 맞춤) -->
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a class="site-header__logo" href="../index.html">🌊 동해 카페</a>
+
+        <nav class="site-header__nav">
+          <a class="btn btn--ghost" href="../index.html">홈</a>
+          <a class="btn btn--ghost" href="../menus/list.html">메뉴</a>
+
+          <!-- 장바구니: data-cart-badge 는 CafeUtils.updateCartBadges 가 자동으로 채운다 -->
+          <a class="site-header__cart" href="../basket/list.html">
+            <span aria-hidden="true">🧺</span>
+            <span class="sr-only">장바구니</span>
+            <span class="site-header__cart-count" data-cart-badge hidden>0</span>
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- 페이지 제목 (2·3·4단계 page-head 패턴 재사용) -->
+      <div class="page-head">
+        <div>
+          <p class="breadcrumb">동해 카페 · 주문 상세</p>
+          <h1 class="page-head__title">주문 상세</h1>
+          <p class="page-head__sub">
+            접수된 주문의 내역을 확인하세요.
+          </p>
+        </div>
+      </div>
+
+      <!-- 주문 상세 전체를 detail.js 가 렌더한다 (못 찾으면 .empty-state) -->
+      <section data-detail aria-live="polite">
+        <!-- detail.js 가 렌더 -->
+      </section>
+    </main>
+  </body>
+</html>
