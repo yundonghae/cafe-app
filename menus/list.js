@@ -5,27 +5,25 @@
    ============================================ */
 
 (function () {
-  const { $, getParam, formatPrice, escapeHtml, showToast, addToCart } =
-    window.CafeUtils;
-  const { getMenuById, getCategories, getCategoryById, getMenusByCategory } =
-    window.CafeData;
+  const { $, getParam, formatPrice, escapeHtml, showToast, addToCart } = window.CafeUtils;
+  const { getMenuById, getCategories, getCategoryById, getMenusByCategory } = window.CafeData;
 
   /* --- 화면 상태 (카테고리 필터 + 검색어) --- */
   const state = {
-    categoryId: "all",
-    keyword: "",
+    categoryId: 'all',
+    keyword: '',
   };
 
-  const grid = $("[data-grid]");
-  const filters = $("[data-filters]");
-  const searchInput = $("[data-search]");
+  const grid = $('[data-grid]');
+  const filters = $('[data-filters]');
+  const searchInput = $('[data-search]');
 
   /**
    * 이미지 주소 안전장치 (2단계와 동일한 방식).
    * javascript: 같은 위험한 스킴을 막고, http(s) 주소만 통과시킨다.
    */
   function safeImageUrl(url) {
-    return /^https?:\/\//i.test(String(url || "")) ? url : "";
+    return /^https?:\/\//i.test(String(url || '')) ? url : '';
   }
 
   /* ============================================
@@ -33,17 +31,17 @@
      ============================================ */
 
   function renderFilters() {
-    const categories = [{ id: "all", name: "전체", emoji: "🐚" }, ...getCategories()];
+    const categories = [{ id: 'all', name: '전체', emoji: '🐚' }, ...getCategories()];
     filters.innerHTML = categories
       .map((c) => {
-        const on = c.id === state.categoryId ? " filter--on" : "";
+        const on = c.id === state.categoryId ? ' filter--on' : '';
         return `<button class="btn btn--outline btn--sm filter${on}"
                   data-category="${escapeHtml(c.id)}"
                   aria-pressed="${c.id === state.categoryId}">
                   ${escapeHtml(c.emoji)} ${escapeHtml(c.name)}
                 </button>`;
       })
-      .join("");
+      .join('');
   }
 
   /* ============================================
@@ -55,16 +53,13 @@
     const kw = state.keyword.trim().toLowerCase();
     const menus = getMenusByCategory(state.categoryId);
     if (!kw) return menus;
-    return menus.filter(
-      (m) =>
-        m.name.toLowerCase().includes(kw) ||
-        String(m.description || "").toLowerCase().includes(kw)
-    );
+    // 수정 후 (이름만)
+    return menus.filter((m) => m.name.toLowerCase().includes(kw));
   }
 
   function menuCardHtml(menu) {
     const category = getCategoryById(menu.categoryId);
-    const categoryLabel = category ? `${category.emoji} ${category.name}` : "미분류";
+    const categoryLabel = category ? `${category.emoji} ${category.name}` : '미분류';
     const image = safeImageUrl(menu.image);
     const id = encodeURIComponent(menu.id);
     const detailUrl = `./detail.html?id=${id}`;
@@ -74,9 +69,7 @@
       ? `<span class="chip chip--danger menu-card__flag">품절</span>`
       : `<span class="chip chip--success menu-card__flag">판매중</span>`;
 
-    const tags = (menu.tags || [])
-      .map((t) => `<span class="badge badge--sand">${escapeHtml(t)}</span>`)
-      .join("");
+    const tags = (menu.tags || []).map((t) => `<span class="badge badge--sand">${escapeHtml(t)}</span>`).join('');
 
     // 품절 메뉴는 담기 버튼을 비활성화한다
     const addButton = menu.soldOut
@@ -85,7 +78,7 @@
                  data-add="${escapeHtml(menu.id)}">담기</button>`;
 
     return `
-      <article class="card menu-card${menu.soldOut ? " menu-card--soldout" : ""}">
+      <article class="card menu-card${menu.soldOut ? ' menu-card--soldout' : ''}">
         <a class="menu-card__thumb" href="${detailUrl}"
            aria-label="${escapeHtml(menu.name)} 상세 보기">
           ${flag}
@@ -93,7 +86,7 @@
             image
               ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(menu.name)}"
                    loading="lazy" onerror="this.style.display='none'">`
-              : ""
+              : ''
           }
         </a>
         <div class="menu-card__body">
@@ -105,7 +98,7 @@
             <a href="${detailUrl}">${escapeHtml(menu.name)}</a>
           </h3>
           <p class="menu-card__desc">${escapeHtml(menu.description)}</p>
-          ${tags ? `<div class="menu-card__tags">${tags}</div>` : ""}
+          ${tags ? `<div class="menu-card__tags">${tags}</div>` : ''}
           <div class="menu-card__actions">
             <a class="btn btn--outline btn--sm" href="${detailUrl}">상세 보기</a>
             ${addButton}
@@ -127,7 +120,7 @@
       return;
     }
 
-    grid.innerHTML = menus.map(menuCardHtml).join("");
+    grid.innerHTML = menus.map(menuCardHtml).join('');
   }
 
   /* ============================================
@@ -135,8 +128,8 @@
      ============================================ */
 
   // 카테고리 필터 (이벤트 위임)
-  filters.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-category]");
+  filters.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-category]');
     if (!btn) return;
     state.categoryId = btn.dataset.category;
     renderFilters();
@@ -144,14 +137,14 @@
   });
 
   // 검색어 입력
-  searchInput.addEventListener("input", (e) => {
+  searchInput.addEventListener('input', (e) => {
     state.keyword = e.target.value;
     renderGrid();
   });
 
   // 담기 (이벤트 위임 → 카드가 다시 그려져도 동작)
-  grid.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-add]");
+  grid.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-add]');
     if (!btn) return;
 
     const menu = getMenuById(btn.dataset.add);
@@ -159,13 +152,13 @@
 
     // 목록을 띄운 뒤 관리자가 품절 처리했을 수도 있으니 한 번 더 확인
     if (menu.soldOut) {
-      showToast(`'${menu.name}' 은(는) 방금 품절되었습니다.`, "warning");
+      showToast(`'${menu.name}' 은(는) 방금 품절되었습니다.`, 'warning');
       renderGrid();
       return;
     }
 
     addToCart(menu.id, 1); // 내부에서 장바구니 배지까지 갱신된다
-    showToast(`'${menu.name}' 을(를) 장바구니에 담았습니다.`, "success");
+    showToast(`'${menu.name}' 을(를) 장바구니에 담았습니다.`, 'success');
   });
 
   /* ============================================
@@ -173,15 +166,15 @@
      ============================================ */
 
   // 다른 페이지에서 남긴 안내 메시지가 있으면 이어받아 표시한다
-  const flash = sessionStorage.getItem("cafe.flash");
+  const flash = sessionStorage.getItem('cafe.flash');
   if (flash) {
-    sessionStorage.removeItem("cafe.flash");
-    showToast(flash, "success");
+    sessionStorage.removeItem('cafe.flash');
+    showToast(flash, 'success');
   }
 
   // 메인 페이지의 카테고리 바로가기(?category=<id>)로 들어오면 그 필터로 시작한다.
   // 없는 카테고리 id 면 무시하고 기본값("전체")을 유지한다.
-  const initialCategory = getParam("category");
+  const initialCategory = getParam('category');
   if (initialCategory && getCategoryById(initialCategory)) {
     state.categoryId = initialCategory;
   }
