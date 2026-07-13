@@ -191,12 +191,69 @@
   color: var(--sea-sky);
 }
 
-/* 히어로 아래를 가르는 물결 띠 */
-.hero__wave {
+/* ============================================
+   히어로 하단 물결 (SVG + CSS 애니메이션)
+   색은 전부 variables.css 의 바다색 변수만 사용한다.
+   ============================================ */
+
+.hero__waves {
   position: relative;
-  z-index: 1;
-  height: 6px;
-  background: var(--grad-wave);
+  z-index: 1; /* .hero::before 의 빛 번짐 위로 올린다 */
+  display: block;
+  width: 100%;
+  /* preserveAspectRatio="none" 이라 원본 비율과 무관하게 높이를 정할 수 있다 */
+  height: 120px;
+}
+
+/*
+  겹 공통: 파형 한 칸(=viewBox 가로 1440)만큼 밀어 무한 루프.
+  겹마다 아래에서 색 · 투명도 · 속도 · 방향을 달리해 깊이감을 만든다.
+*/
+.hero-wave {
+  animation: wave-drift 14s linear infinite;
+  will-change: transform; /* 변환만 애니메이션 → GPU 합성 (레이아웃/페인트 없음) */
+}
+
+/* 가장 뒤 · 가장 느림 — 깊은 청록이 어렴풋이 비친다 */
+.hero-wave--back {
+  fill: var(--sea-teal);
+  opacity: 0.35;
+  animation-duration: 22s;
+}
+
+/* 중간 — 반대 방향으로 흘러 뒤 겹과 스치듯 교차한다 */
+.hero-wave--mid {
+  fill: var(--sea-aqua);
+  opacity: 0.4;
+  animation-duration: 16s;
+  animation-direction: reverse;
+}
+
+/* 앞 — 밝은 수면 */
+.hero-wave--front {
+  fill: var(--sea-sky);
+  opacity: 0.55;
+  animation-duration: 11s;
+}
+
+/* 맨 앞 · 가장 빠름 — 페이지 배경색이라 아래 섹션과 그대로 이어 붙는다 */
+.hero-wave--foam {
+  fill: var(--color-bg);
+  animation-duration: 8s;
+  animation-direction: reverse;
+}
+
+/*
+  파형 한 칸(1440 사용자 단위)을 밀면 옆에 둔 두 번째 파형이 정확히 그 자리를 메운다.
+  → 시작과 끝 모양이 같아 이음매 없이 반복된다.
+*/
+@keyframes wave-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-1440px);
+  }
 }
 
 /* ============================================
@@ -450,6 +507,11 @@
     gap: var(--space-lg);
     padding: var(--space-lg);
   }
+
+  /* 태블릿 — 물결을 조금 낮춰 히어로 문구가 답답해 보이지 않게 한다 */
+  .hero__waves {
+    height: 90px;
+  }
 }
 
 @media (max-width: 600px) {
@@ -459,6 +521,30 @@
 
   .hero__title {
     font-size: var(--fs-2xl);
+  }
+
+  /*
+    모바일 — 화면이 좁으면 파형 한 칸이 가로로 크게 늘어나 밋밋해 보인다.
+    높이를 더 줄이고 속도를 살짝 올려 자연스러운 일렁임을 유지한다.
+  */
+  .hero__waves {
+    height: 60px;
+  }
+
+  .hero-wave--back {
+    animation-duration: 16s;
+  }
+
+  .hero-wave--mid {
+    animation-duration: 12s;
+  }
+
+  .hero-wave--front {
+    animation-duration: 9s;
+  }
+
+  .hero-wave--foam {
+    animation-duration: 7s;
   }
 
   .hero__actions {
@@ -476,5 +562,20 @@
   /* 카테고리는 두 칸으로 접는다 */
   .category-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ============================================
+   접근성 — 애니메이션 최소화 설정 존중
+   운영체제에서 "동작 줄이기"를 켠 사용자에게는 물결을 멈춘다.
+   (모양은 그대로 남으므로 수면 디자인은 유지된다)
+
+   variables.css 의 전역 규칙은 animation-duration 만 줄이므로,
+   여기서 animation-name 자체를 none 으로 꺼서 확실히 정지시킨다.
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-wave {
+    animation: none;
   }
 }

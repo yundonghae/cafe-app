@@ -64,8 +64,52 @@
             <a class="btn btn--outline btn--lg hero__ghost" href="orders/list.html"> 주문 내역 </a>
           </div>
         </div>
-        <!-- 수면을 가르는 물결 띠 (장식용이라 스크린리더에서 숨김) -->
-        <div class="hero__wave" aria-hidden="true"></div>
+        <!--
+          수면 물결 (순수 장식이라 스크린리더에서 숨김 · 포커스도 받지 않음).
+          같은 파형 하나를 네 겹으로 겹치고, index.css 에서 겹마다 다른 색·속도·방향으로
+          흘려 깊이감을 만든다. preserveAspectRatio="none" 이라 가로로 자유롭게 늘어난다.
+        -->
+        <svg
+          class="hero__waves"
+          viewBox="0 0 1440 140"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <defs>
+            <!--
+              좌우 끝의 높이(y=60)와 기울기가 같은 파형이라,
+              가로로 한 칸(1440)씩 밀어도 이음매가 보이지 않는다.
+            -->
+            <path
+              id="hero-wave-shape"
+              d="M0,60 C240,4 480,116 720,60 C960,4 1200,116 1440,60 L1440,140 L0,140 Z"
+            />
+          </defs>
+
+          <!--
+            각 겹은 파형 2개를 나란히 두고 통째로 왼쪽(또는 오른쪽)으로 민다.
+            정확히 한 칸을 밀면 옆 파형이 자리를 메우므로 무한 루프가 매끄럽다.
+            y 값으로 겹마다 높이를 달리 둬서, 앞 겹이 뒤 겹을 가리지 않게 한다.
+          -->
+          <g class="hero-wave hero-wave--back">
+            <use href="#hero-wave-shape" x="0" y="0" />
+            <use href="#hero-wave-shape" x="1440" y="0" />
+          </g>
+          <g class="hero-wave hero-wave--mid">
+            <use href="#hero-wave-shape" x="0" y="16" />
+            <use href="#hero-wave-shape" x="1440" y="16" />
+          </g>
+          <g class="hero-wave hero-wave--front">
+            <use href="#hero-wave-shape" x="0" y="30" />
+            <use href="#hero-wave-shape" x="1440" y="30" />
+          </g>
+          <!-- 맨 앞 겹은 페이지 배경색 — 물결이 아래 섹션으로 자연스럽게 이어진다 -->
+          <g class="hero-wave hero-wave--foam">
+            <use href="#hero-wave-shape" x="0" y="46" />
+            <use href="#hero-wave-shape" x="1440" y="46" />
+          </g>
+        </svg>
       </section>
 
       <!-- ============================================
