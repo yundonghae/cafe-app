@@ -13,6 +13,8 @@
     showToast,
     addToCart,
     qtyStepperHtml,
+    toggleFavorite,
+    favButtonHtml,
   } = window.CafeUtils;
   const { getMenuById, getCategoryById } = window.CafeData;
 
@@ -103,6 +105,8 @@
           <div class="detail__head">
             <span class="badge">${escapeHtml(categoryLabel)}</span>
             ${statusChip}
+            <!-- 찜 하트 (품절이어도 찜해 둘 수 있다) -->
+            ${favButtonHtml(menu.id)}
           </div>
 
           <h2 class="detail__name">${escapeHtml(menu.name)}</h2>
@@ -130,7 +134,23 @@
 
   root.addEventListener("click", (e) => {
     const menu = getMenuById(id);
-    if (!menu || menu.soldOut) return;
+    if (!menu) return;
+
+    // 찜 토글 — 품절 여부와 무관하므로 아래 soldOut 가드보다 먼저 처리한다
+    const favBtn = e.target.closest("[data-fav]");
+    if (favBtn) {
+      const on = toggleFavorite(menu.id);
+      // 버튼만 갈아 끼운다 (상세 전체를 다시 그리면 고른 수량이 날아간다)
+      favBtn.outerHTML = favButtonHtml(menu.id);
+      showToast(
+        on ? `'${menu.name}' 을(를) 찜했습니다.` : `'${menu.name}' 찜을 해제했습니다.`,
+        on ? "success" : "default"
+      );
+      return;
+    }
+
+    // 아래 주문 관련 동작은 품절이면 하지 않는다
+    if (menu.soldOut) return;
 
     // 수량 증가 / 감소
     if (e.target.closest("[data-qty-inc]")) {

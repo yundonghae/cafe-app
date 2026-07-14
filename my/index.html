@@ -106,6 +106,21 @@
               <button class="btn btn--primary" type="submit">저장</button>
             </form>
           </section>
+
+          <!--
+            찜한 메뉴 — 메뉴 목록·상세의 하트로 담고 여기서 모아 본다.
+            id="favorites" 는 남겨 둔다: 다른 곳에서 #favorites 앵커로 바로 올 수 있다.
+            (variables.css 의 html { scroll-behavior: smooth } 덕에 부드럽게 이동)
+          -->
+          <section class="card favorites" id="favorites" aria-live="polite">
+            <div class="favorites__head">
+              <h2 class="section-title">찜한 메뉴</h2>
+              <a class="btn btn--ghost btn--sm" href="../menus/list.html">메뉴 더 보기 →</a>
+            </div>
+            <div data-favorites>
+              <!-- index.js 가 렌더 -->
+            </div>
+          </section>
         </div>
 
         <!-- 오른쪽: 최근 주문 · 바로가기 -->

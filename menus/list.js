@@ -5,7 +5,8 @@
    ============================================ */
 
 (function () {
-  const { $, getParam, formatPrice, escapeHtml, showToast, addToCart } = window.CafeUtils;
+  const { $, getParam, formatPrice, escapeHtml, showToast, addToCart, toggleFavorite, favButtonHtml } =
+    window.CafeUtils;
   const { getMenuById, getCategories, getCategoryById, getMenusByCategory } = window.CafeData;
 
   /* --- 화면 상태 (카테고리 필터 + 검색어) --- */
@@ -89,6 +90,8 @@
               : ''
           }
         </a>
+        <!-- 찜 하트 — 썸네일 링크 밖에 두어야 클릭이 상세 이동으로 새지 않는다 -->
+        ${favButtonHtml(menu.id)}
         <div class="menu-card__body">
           <div class="menu-card__top">
             <span class="badge">${escapeHtml(categoryLabel)}</span>
@@ -142,8 +145,37 @@
     renderGrid();
   });
 
-  // 담기 (이벤트 위임 → 카드가 다시 그려져도 동작)
+  /**
+   * 하트 버튼 하나만 현재 상태로 갱신한다.
+   * 목록 전체를 다시 그리면 스크롤/포커스가 튀므로, 누른 버튼만 손본다.
+   */
+  function syncFavButton(btn, on) {
+    btn.classList.toggle('fav-btn--on', on);
+    btn.setAttribute('aria-pressed', String(on));
+    btn.setAttribute('aria-label', on ? '찜 해제' : '찜하기');
+    btn.setAttribute('title', on ? '찜 해제' : '찜하기');
+    const icon = btn.querySelector('span');
+    if (icon) icon.textContent = on ? '❤️' : '🤍';
+  }
+
+  // 담기 · 찜 (이벤트 위임 → 카드가 다시 그려져도 동작)
   grid.addEventListener('click', (e) => {
+    /* --- 찜 토글 --- */
+    const favBtn = e.target.closest('[data-fav]');
+    if (favBtn) {
+      const menu = getMenuById(favBtn.dataset.fav);
+      if (!menu) return;
+
+      const on = toggleFavorite(menu.id);
+      syncFavButton(favBtn, on); // 카드 재렌더 없이 하트만 즉시 반영
+      showToast(
+        on ? `'${menu.name}' 을(를) 찜했습니다.` : `'${menu.name}' 찜을 해제했습니다.`,
+        on ? 'success' : 'default'
+      );
+      return;
+    }
+
+    /* --- 장바구니 담기 --- */
     const btn = e.target.closest('[data-add]');
     if (!btn) return;
 

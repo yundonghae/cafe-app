@@ -254,8 +254,80 @@ function saveUser(user) {
 }
 
 /* ============================================
+   즐겨찾기(찜)
+   구조: ["m-wave-soda", ...]  (menuId 문자열 배열)
+
+   ⚠️ data.js 의 STORAGE_KEYS 에는 찜 키가 없고 data.js 는 수정 금지이므로,
+      "cafe.favorites" 리터럴을 여기서만 쓴다 (다른 파일로 흩어지지 않게).
+   ============================================ */
+
+const FAVORITES_KEY = "cafe.favorites";
+
+/** 찜한 menuId 배열 (없거나 값이 깨져 있으면 빈 배열) */
+function getFavorites() {
+  try {
+    const list = JSON.parse(localStorage.getItem(FAVORITES_KEY));
+    // 저장값이 배열이 아닌 경우(수동 조작 등)에도 화면이 깨지지 않게 막는다
+    return Array.isArray(list) ? list : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveFavorites(list) {
+  localStorage.setItem(FAVORITES_KEY, JSON.stringify(list));
+  return list;
+}
+
+/** 이 메뉴가 찜되어 있는가 */
+function isFavorite(menuId) {
+  return getFavorites().includes(menuId);
+}
+
+/** 찜 토글 — 토글 뒤의 상태를 반환한다 (true = 찜됨) */
+function toggleFavorite(menuId) {
+  const list = getFavorites();
+  const i = list.indexOf(menuId);
+
+  if (i >= 0) {
+    list.splice(i, 1);
+    saveFavorites(list);
+    return false; // 해제됨
+  }
+
+  list.push(menuId);
+  saveFavorites(list);
+  return true; // 찜됨
+}
+
+/**
+ * 찜한 메뉴의 실제 메뉴 객체 배열.
+ * 사장님이 지운 메뉴(getMenuById 가 null)는 걸러낸다.
+ * (getCartDetail 이 삭제된 메뉴를 거르는 것과 같은 방어 패턴)
+ */
+function getFavoriteMenus() {
+  return getFavorites()
+    .map((id) => window.CafeData.getMenuById(id))
+    .filter(Boolean);
+}
+
+/* ============================================
    재사용 컴포넌트 마크업
    ============================================ */
+
+/** 하트(찜) 버튼 — 호출: favButtonHtml(menuId) · 찜 여부에 따라 ❤️/🤍 */
+function favButtonHtml(menuId) {
+  const on = isFavorite(menuId);
+  return `
+    <button class="fav-btn${on ? " fav-btn--on" : ""}"
+            type="button"
+            data-fav="${escapeHtml(menuId)}"
+            aria-pressed="${on}"
+            aria-label="${on ? "찜 해제" : "찜하기"}"
+            title="${on ? "찜 해제" : "찜하기"}">
+      <span aria-hidden="true">${on ? "❤️" : "🤍"}</span>
+    </button>`;
+}
 
 /** 수량 스텝퍼 — 호출: qtyStepperHtml(menuId, qty) */
 function qtyStepperHtml(id, qty) {
@@ -364,9 +436,15 @@ window.CafeUtils = {
   saveUser,
   // 관리자 진입 가드 (세션 단위 · 실수 방지용)
   requireAdmin,
+  // 즐겨찾기(찜)
+  getFavorites,
+  isFavorite,
+  toggleFavorite,
+  getFavoriteMenus,
   // 컴포넌트
   qtyStepperHtml,
   statusChipHtml,
+  favButtonHtml,
 };
 
 // 페이지 로드 시 장바구니 배지 동기화
