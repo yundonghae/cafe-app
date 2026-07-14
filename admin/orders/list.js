@@ -19,6 +19,7 @@
     updateOrderStatus,
     ORDER_STATUS,
     statusChipHtml,
+    emptyStateHtml,
   } = window.CafeUtils;
 
   /**
@@ -128,11 +129,12 @@
       const noneAtAll = getOrders().length === 0;
       orderBox.innerHTML = `
         <div class="card empty-state">
-          <div class="empty-state__icon">🧾</div>
-          <p>${noneAtAll ? "아직 들어온 주문이 없습니다." : "이 상태의 주문이 없습니다."}</p>
-          <p class="text-muted">
-            ${noneAtAll ? "첫 파도를 기다리는 중입니다." : "다른 상태를 골라 보세요."}
-          </p>
+          ${emptyStateHtml(
+            // 주문 자체가 없으면 "아직 안 왔다"(유리병), 필터 결과가 없으면 "안 걸렸다"(그물)
+            noneAtAll ? "bottle" : "net",
+            noneAtAll ? "아직 들어온 주문이 없습니다." : "이 상태의 주문이 없습니다.",
+            noneAtAll ? "첫 파도를 기다리는 중입니다." : "다른 상태를 골라 보세요."
+          )}
         </div>`;
       return;
     }

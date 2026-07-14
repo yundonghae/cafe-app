@@ -5,8 +5,17 @@
    ============================================ */
 
 (function () {
-  const { $, getParam, formatPrice, escapeHtml, showToast, addToCart, toggleFavorite, favButtonHtml } =
-    window.CafeUtils;
+  const {
+    $,
+    getParam,
+    formatPrice,
+    escapeHtml,
+    showToast,
+    addToCart,
+    toggleFavorite,
+    favButtonHtml,
+    emptyStateHtml,
+  } = window.CafeUtils;
   const { getMenuById, getCategories, getCategoryById, getMenusByCategory } = window.CafeData;
 
   /* --- 화면 상태 (카테고리 필터 + 검색어) --- */
@@ -116,9 +125,11 @@
     if (menus.length === 0) {
       grid.innerHTML = `
         <div class="empty-state" style="grid-column: 1 / -1;">
-          <div class="empty-state__icon">🌊</div>
-          <p>그물에 걸린 메뉴가 없습니다.</p>
-          <p class="text-muted">다른 카테고리나 검색어로 다시 던져 보세요.</p>
+          ${emptyStateHtml(
+            'net', // 빈 그물 — 검색·필터에 아무것도 걸리지 않았다
+            '그물에 걸린 메뉴가 없습니다.',
+            '다른 카테고리나 검색어로 다시 던져 보세요.'
+          )}
         </div>`;
       return;
     }

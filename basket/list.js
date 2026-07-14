@@ -16,6 +16,7 @@
     clearCart,
     checkout,
     qtyStepperHtml,
+    emptyStateHtml,
   } = window.CafeUtils;
 
   const root = $("[data-basket]");
@@ -36,15 +37,16 @@
      ============================================ */
 
   /** 장바구니가 비었을 때 — 메뉴 목록으로 안내한다 */
-  function emptyStateHtml() {
+  /* 이름이 CafeUtils.emptyStateHtml 과 겹치면 자기 자신을 부르게 되므로 따로 둔다 */
+  function emptyBasketHtml() {
     return `
       <div class="card empty-state">
-        <div class="empty-state__icon">🧺</div>
-        <p>장바구니에 담긴 메뉴가 없습니다.</p>
-        <p class="text-muted">수평선 너머의 한 잔을 골라 담아 보세요.</p>
-        <p style="margin-top: var(--space-lg);">
-          <a class="btn btn--primary" href="../menus/list.html">메뉴 보러가기</a>
-        </p>
+        ${emptyStateHtml(
+          "shell", // 빈 조개 — 아무것도 담기지 않았다
+          "장바구니에 담긴 메뉴가 없습니다.",
+          "수평선 너머의 한 잔을 골라 담아 보세요.",
+          `<a class="btn btn--primary" href="../menus/list.html">메뉴 보러가기</a>`
+        )}
       </div>`;
   }
 
@@ -124,7 +126,7 @@
     const detail = getCartDetail();
 
     if (detail.items.length === 0) {
-      root.innerHTML = emptyStateHtml();
+      root.innerHTML = emptyBasketHtml();
       return;
     }
 

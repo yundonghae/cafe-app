@@ -17,6 +17,7 @@
     getOrders,
     ORDER_STATUS,
     statusChipHtml,
+    emptyStateHtml,
   } = window.CafeUtils;
   const { getMenus } = window.CafeData;
 
@@ -108,9 +109,11 @@
     if (orders.length === 0) {
       recentBox.innerHTML = `
         <div class="empty-state">
-          <div class="empty-state__icon">🧾</div>
-          <p>아직 들어온 주문이 없습니다.</p>
-          <p class="text-muted">첫 파도를 기다리는 중입니다.</p>
+          ${emptyStateHtml(
+            "bottle", // 물결 위 유리병 — 아직 도착한 주문이 없다
+            "아직 들어온 주문이 없습니다.",
+            "첫 파도를 기다리는 중입니다."
+          )}
         </div>`;
       return;
     }

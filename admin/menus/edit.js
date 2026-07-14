@@ -8,7 +8,7 @@
   // 🔐 관리자 세션 가드 — 다른 로직보다 먼저. 통과 못 하면 렌더하지 않고 즉시 빠져나간다.
   if (!window.CafeUtils.requireAdmin("../../index.html")) return;
 
-  const { $, getParam, formatPrice, escapeHtml } = window.CafeUtils;
+  const { $, getParam, formatPrice, escapeHtml, emptyStateHtml } = window.CafeUtils;
   const { getMenuById, getCategories, getCategoryById, updateMenu } = window.CafeData;
 
   const form = $("#menu-form");
@@ -25,12 +25,12 @@
     missing.hidden = false;
     missing.innerHTML = `
       <div class="card empty-state">
-        <div class="empty-state__icon">🧭</div>
-        <p>수정할 메뉴가 해류에 휩쓸려 사라졌습니다.</p>
-        <p class="text-muted">삭제되었거나 잘못된 주소일 수 있습니다.</p>
-        <p style="margin-top: var(--space-lg);">
-          <a class="btn btn--primary" href="./list.html">메뉴 목록으로</a>
-        </p>
+        ${emptyStateHtml(
+          "net", // 빈 그물 — 찾았지만 걸리지 않았다
+          "수정할 메뉴가 해류에 휩쓸려 사라졌습니다.",
+          "삭제되었거나 잘못된 주소일 수 있습니다.",
+          `<a class="btn btn--primary" href="./list.html">메뉴 목록으로</a>`
+        )}
       </div>`;
     return; // 아래 로직은 실행하지 않는다
   }

@@ -329,6 +329,82 @@ function favButtonHtml(menuId) {
     </button>`;
 }
 
+/* --------------------------------------------
+   빈 상태(.empty-state) 일러스트
+
+   바다 모티브 라인아트 3종. 상황에 맞게 골라 쓴다.
+   - shell  : 빈 조개  → "담긴 게 없다" (장바구니 · 찜)
+   - bottle : 물결 위 유리병 → "아직 기록이 없다" (주문 내역 · 최근 주문)
+   - net    : 빈 그물  → "찾았지만 안 잡혔다" (검색·필터 결과 없음 · 못 찾음)
+
+   ⚠️ 스타일을 인라인으로 둔 이유:
+      헤더처럼 클래스로 빼면 콜로케이션 규약상 9개 페이지 CSS 에 전부 복제된다.
+      일러스트를 이 파일 한 곳에만 두기 위해 색·크기를 인라인으로 지정한다.
+      색은 variables.css 변수만 쓴다 (새 hex 없음).
+   -------------------------------------------- */
+
+const EMPTY_ART = {
+  // 모래 위에 놓인 빈 조개
+  shell: `
+    <path d="M80 32 C 52 32, 32 56, 32 80 L 128 80 C 128 56, 108 32, 80 32 Z" />
+    <path d="M80 32 L 80 80 M 61 37 L 49 80 M 99 37 L 111 80 M 46 50 L 36 80 M 114 50 L 124 80" />
+    <path d="M32 80 L 128 80" style="stroke: var(--sea-teal)" />
+    <path d="M18 96 C 44 89, 68 101, 92 94 C 112 88, 130 96, 146 93"
+          style="stroke: var(--sea-sky)" />`,
+
+  // 물결 위를 떠다니는 유리병 (메시지를 기다리는 중)
+  bottle: `
+    <path d="M71 22 h18 v14 l8 13 v31 a7 7 0 0 1 -7 7 h-20 a7 7 0 0 1 -7 -7 v-31 l8 -13 z" />
+    <path d="M71 22 h18" style="stroke: var(--sea-teal)" />
+    <path d="M69 60 h22 M 69 70 h14" style="stroke: var(--sea-sky)" />
+    <path d="M14 98 C 32 88, 50 108, 68 98 C 86 88, 104 108, 122 98 C 132 92, 140 96, 148 99"
+          style="stroke: var(--sea-teal)" />
+    <path d="M14 110 C 32 100, 50 118, 68 110 C 86 100, 104 118, 122 110 C 132 105, 140 108, 148 111"
+          style="stroke: var(--sea-sky)" />`,
+
+  // 아무것도 걸리지 않은 빈 그물
+  net: `
+    <path d="M34 28 L 126 28" style="stroke: var(--sea-teal)" />
+    <path d="M44 28 C 44 68, 62 96, 80 96 C 98 96, 116 68, 116 28" />
+    <path d="M54 44 L 106 44 M 49 60 L 111 60 M 57 76 L 103 76"
+          style="stroke: var(--sea-sky)" />
+    <path d="M64 30 L 69 90 M 80 30 L 80 96 M 96 30 L 91 90"
+          style="stroke: var(--sea-sky)" />
+    <path d="M80 106 C 76 110, 76 116, 80 116 C 84 116, 84 110, 80 106 Z"
+          style="stroke: var(--sea-aqua)" />`,
+};
+
+/** 일러스트 한 장 (장식이므로 스크린리더에서 감춘다) */
+function emptyArtHtml(type) {
+  const art = EMPTY_ART[type] || EMPTY_ART.shell;
+  return `
+    <svg viewBox="0 0 160 125" width="150" height="117"
+         aria-hidden="true" focusable="false" fill="none"
+         style="display: block; margin: 0 auto var(--space-md); max-width: 100%;
+                stroke: var(--sea-aqua); stroke-width: 2;
+                stroke-linecap: round; stroke-linejoin: round;">
+      ${art}
+    </svg>`;
+}
+
+/**
+ * 빈 상태 내용물 — 일러스트 + 문구(+ 선택적 버튼).
+ * 바깥 래퍼(<div class="empty-state">)는 페이지마다 클래스가 달라서(card / grid-column 등)
+ * 각 페이지가 그대로 유지하고, 이 함수는 그 **안쪽 내용**만 만들어 준다.
+ *
+ * @param {"shell"|"bottle"|"net"} iconType 일러스트 종류
+ * @param {string} title   굵은 첫 줄 (이스케이프됨)
+ * @param {string} message 회색 보조 문구 (이스케이프됨)
+ * @param {string} [actionHtml] 버튼/링크 마크업 (페이지가 만든 신뢰된 HTML — 이스케이프하지 않음)
+ */
+function emptyStateHtml(iconType, title, message, actionHtml) {
+  return `
+    ${emptyArtHtml(iconType)}
+    <p>${escapeHtml(title)}</p>
+    <p class="text-muted">${escapeHtml(message)}</p>
+    ${actionHtml ? `<p style="margin-top: var(--space-lg);">${actionHtml}</p>` : ""}`;
+}
+
 /** 수량 스텝퍼 — 호출: qtyStepperHtml(menuId, qty) */
 function qtyStepperHtml(id, qty) {
   return `
@@ -445,6 +521,7 @@ window.CafeUtils = {
   qtyStepperHtml,
   statusChipHtml,
   favButtonHtml,
+  emptyStateHtml,
 };
 
 // 페이지 로드 시 장바구니 배지 동기화
