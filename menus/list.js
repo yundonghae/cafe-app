@@ -135,6 +135,51 @@
     }
 
     grid.innerHTML = menus.map(menuCardHtml).join('');
+
+    // 필터·검색으로 카드를 다시 그릴 때마다 새 카드들을 관찰 대상으로 등록한다
+    revealCards(grid.querySelectorAll('.menu-card'));
+  }
+
+  /* ============================================
+     스크롤 등장 애니메이션 (IntersectionObserver)
+     카드가 화면에 들어올 때 아래에서 떠오르듯 나타난다.
+     실제 움직임은 list.css 의 .reveal / .is-visible 이 담당한다.
+     ============================================ */
+
+  /** 카드마다 주는 시차 — 물결처럼 순차 등장. 과하지 않게 상한을 둔다 */
+  const STAGGER_MS = 50;
+  const STAGGER_MAX_MS = 300;
+
+  /** 한 번 등장한 카드는 다시 숨기지 않는다 (등장 즉시 관찰 해제) */
+  const revealObserver =
+    'IntersectionObserver' in window
+      ? new IntersectionObserver(
+          (entries, obs) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.add('is-visible');
+              obs.unobserve(entry.target);
+            });
+          },
+          // 카드가 살짝 올라온 뒤에 시작해야 자연스럽다
+          { rootMargin: '0px 0px -10% 0px' }
+        )
+      : null;
+
+  function revealCards(cards) {
+    cards.forEach((card, i) => {
+      card.classList.add('reveal');
+      // 카드 수가 가변이라 시차는 인라인으로 준다 (CSS 로 두면 :nth-child 나열이 지저분해진다)
+      card.style.animationDelay = `${Math.min(i * STAGGER_MS, STAGGER_MAX_MS)}ms`;
+
+      // IntersectionObserver 를 못 쓰는 환경에서는 애니메이션 없이 바로 보여 준다
+      // (그냥 두면 opacity:0 인 카드가 영영 안 보인다)
+      if (!revealObserver) {
+        card.classList.add('is-visible');
+        return;
+      }
+      revealObserver.observe(card);
+    });
   }
 
   /* ============================================
