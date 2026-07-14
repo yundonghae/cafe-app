@@ -17,7 +17,7 @@
     favButtonHtml,
     emptyStateHtml,
   } = window.CafeUtils;
-  const { getMenuById, getCategoryById } = window.CafeData;
+  const { getMenuById, getCategoryById, getMenusByCategory } = window.CafeData;
 
   const root = $("[data-detail]");
   const id = getParam("id");
@@ -47,6 +47,73 @@
           `<a class="btn btn--primary" href="./list.html">메뉴 보러 가기</a>`
         )}
       </div>`;
+  }
+
+  /* ============================================
+     연관 메뉴 추천 (같은 카테고리 크로스셀)
+     ============================================ */
+
+  /** 추천으로 보여 줄 최대 개수 */
+  const RELATED_MAX = 4;
+
+  /**
+   * 같은 카테고리의 다른 메뉴를 고른다.
+   *
+   * 선별 규칙 (순서대로):
+   *   1) 현재 메뉴와 **같은 categoryId** (getMenusByCategory)
+   *   2) **자기 자신 제외** — 보고 있는 메뉴를 다시 추천하지 않는다
+   *   3) **품절 제외** — 추천해 놓고 못 사면 안 되므로
+   *   4) 최대 RELATED_MAX 개. 모자라면 있는 만큼만.
+   *
+   * 결과가 0개면 호출부에서 섹션 자체를 그리지 않는다 (빈 섹션을 만들지 않는다).
+   */
+  function relatedMenus(menu) {
+    return getMenusByCategory(menu.categoryId)
+      .filter((m) => m.id !== menu.id && !m.soldOut)
+      .slice(0, RELATED_MAX);
+  }
+
+  function relatedCardHtml(menu) {
+    const image = safeImageUrl(menu.image); // 기존과 같은 http(s) 안전 처리
+    const detailUrl = `./detail.html?id=${encodeURIComponent(menu.id)}`;
+
+    return `
+      <a class="card related__card" href="${detailUrl}">
+        <span class="related__thumb">
+          ${
+            image
+              ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(menu.name)}"
+                   loading="lazy" onerror="this.style.display='none'">`
+              : ""
+          }
+        </span>
+        <span class="related__body">
+          <span class="related__name">${escapeHtml(menu.name)}</span>
+          <strong class="related__price">${formatPrice(menu.price)}</strong>
+        </span>
+      </a>`;
+  }
+
+  /** 추천할 게 없으면 빈 문자열 → 섹션이 아예 그려지지 않는다 */
+  function relatedHtml(menu) {
+    const menus = relatedMenus(menu);
+    if (menus.length === 0) return "";
+
+    const category = getCategoryById(menu.categoryId);
+    const categoryName = category ? category.name : "같은 종류";
+
+    return `
+      <section class="related" aria-label="함께 즐기면 좋은 메뉴">
+        <div class="related__head">
+          <h2 class="related__title">함께 즐기면 좋은 메뉴</h2>
+          <p class="related__sub">
+            ${escapeHtml(categoryName)} 에서 골라 온 다른 한 잔이에요.
+          </p>
+        </div>
+        <div class="related__grid">
+          ${menus.map(relatedCardHtml).join("")}
+        </div>
+      </section>`;
   }
 
   function renderDetail(menu) {
@@ -118,7 +185,10 @@
 
           ${buyBox}
         </div>
-      </div>`;
+      </div>
+
+      <!-- 연관 메뉴 추천 — 추천할 게 없으면 빈 문자열이라 섹션이 생기지 않는다 -->
+      ${relatedHtml(menu)}`;
   }
 
   /** 수량이 바뀔 때 스텝퍼 숫자와 합계 금액을 갱신한다 */
