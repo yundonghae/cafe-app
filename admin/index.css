@@ -327,3 +327,134 @@
     align-items: flex-start;
   }
 }
+
+/* ============================================
+   인기 메뉴 TOP 5 (판매 수량 랭킹)
+   색은 variables.css 변수만 사용 (새 hex 없음).
+   ============================================ */
+
+.ranking {
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+/* 다른 정보 패널과 마찬가지로 .card 의 hover 이동 효과는 끈다 */
+.ranking:hover {
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.ranking__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.ranking__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+/* --- 순위 (1~3위는 메달, 4위부터는 숫자) --- */
+.ranking__rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: none;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* 1~3위는 물빛 테두리로 한 번 더 강조 (메달 이모지와 함께 — 색만으로 구분하지 않는다) */
+.ranking__item--top .ranking__rank {
+  border-color: var(--color-accent);
+  background: var(--color-surface);
+  font-size: var(--fs-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.ranking__body {
+  flex: 1;
+  min-width: 0; /* 긴 메뉴명이 수량을 밀어내지 않도록 */
+}
+
+.ranking__line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.ranking__name {
+  font-weight: 600;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ranking__item--top .ranking__name {
+  color: var(--sea-navy);
+}
+
+.ranking__qty {
+  flex: none;
+  color: var(--sea-cobalt);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- 판매량 막대 (1위 대비 비율) --- */
+.ranking__bar {
+  height: 8px;
+  margin-top: var(--space-xs);
+  border-radius: var(--radius-full);
+  background: var(--color-bg);
+  overflow: hidden;
+}
+
+.ranking__bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--grad-wave); /* 청록에서 하늘색으로 흐르는 물결 */
+}
+
+/* 1~3위 막대는 더 진한 심해색으로 눈에 띄게 */
+.ranking__item--top .ranking__bar-fill {
+  background: var(--grad-ocean);
+}
+
+/* 카드 안에 들어가는 빈 상태는 여백을 줄인다 */
+.ranking .empty-state {
+  padding: var(--space-lg) var(--space-sm);
+}
+
+.ranking .empty-state__icon {
+  font-size: var(--fs-2xl);
+  margin-bottom: var(--space-sm);
+}
+
+/* --- 반응형 --- */
+@media (max-width: 600px) {
+  .ranking {
+    padding: var(--space-md);
+  }
+
+  .ranking__item {
+    gap: var(--space-sm);
+  }
+
+  .ranking__rank {
+    width: 2rem;
+    height: 2rem;
+  }
+}
