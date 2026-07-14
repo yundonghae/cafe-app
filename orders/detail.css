@@ -93,6 +93,79 @@
   display: none;
 }
 
+/* --- 접히는 내비 링크 묶음 --- */
+/* 데스크톱: 지금처럼 가로로 펼친다 (기존 동작 그대로) */
+.site-header__links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* --- 햄버거 버튼 (모바일 전용) --- */
+.site-header__toggle {
+  display: none; /* 데스크톱에서는 숨긴다 */
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg-deep); /* 장바구니 아이콘과 같은 유리 질감 */
+  color: var(--foam);
+  font-size: var(--fs-lg);
+  line-height: 1;
+  transition: box-shadow var(--transition);
+}
+
+.site-header__toggle:hover {
+  box-shadow: var(--glow-aqua);
+}
+
+/* ============================================
+   모바일 헤더 — [로고] [🧺] [☰] 만 한 줄에 남기고,
+   나머지 링크는 햄버거로 여는 드롭다운 패널에 세로로 담는다.
+   ============================================ */
+
+@media (max-width: 768px) {
+  /* 로고가 세로로 깨지지 않도록 한 줄로 고정 */
+  .site-header__logo {
+    white-space: nowrap;
+  }
+
+  .site-header__toggle {
+    display: inline-flex;
+  }
+
+  .site-header__links {
+    /* .site-header 가 sticky(=위치 지정 요소)라 그 기준으로 헤더 바로 아래에 붙는다 */
+    position: absolute;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    z-index: var(--z-overlay); /* 히어로 물결·본문 위로 확실히 띄운다 */
+
+    display: none; /* 기본은 접힘 — js/header.js 가 data-open 을 켜면 펼쳐진다 */
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-xs);
+    padding: var(--space-md);
+
+    background: var(--grad-ocean); /* 헤더와 같은 심해 톤 */
+    border-top: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .site-header__links[data-open="true"] {
+    display: flex;
+  }
+
+  /* 드롭다운 안에서는 링크를 왼쪽 정렬된 한 줄 항목처럼 보여 준다 */
+  .site-header__links .btn {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
 /* --- 페이지 제목 --- */
 .page-head {
   display: flex;

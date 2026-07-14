@@ -14,6 +14,8 @@
     <!-- defer 는 순서를 보장한다: data.js → utils.js → 페이지 스크립트 -->
     <script defer src="js/data.js"></script>
     <script defer src="js/utils.js"></script>
+    <!-- 모바일 헤더 햄버거 토글 (고객 7개 페이지 공용) -->
+    <script defer src="js/header.js"></script>
     <script defer src="index.js"></script>
   </head>
   <body>
@@ -26,20 +28,40 @@
         <a class="site-header__logo" href="index.html">🌊 동해 카페</a>
 
         <nav class="site-header__nav">
-          <a class="btn btn--ghost" href="index.html" aria-current="page">홈</a>
-          <a class="btn btn--ghost" href="menus/list.html">메뉴</a>
-          <a class="btn btn--ghost" href="my/index.html">마이페이지</a>
-          <a class="btn btn--ghost" href="orders/list.html">주문내역</a>
+          <!--
+            접히는 링크 묶음 — 데스크톱에서는 가로로 펼쳐지고,
+            모바일에서는 햄버거로 여는 드롭다운 패널이 된다 (js/header.js 가 data-open 토글).
+          -->
+          <div class="site-header__links" id="site-nav-links" data-nav-panel>
+            <a class="btn btn--ghost" href="index.html" aria-current="page">홈</a>
+            <a class="btn btn--ghost" href="menus/list.html">메뉴</a>
+            <a class="btn btn--ghost" href="my/index.html">마이페이지</a>
+            <a class="btn btn--ghost" href="orders/list.html">주문내역</a>
 
-          <!-- 관리자 진입: 대시보드가 로드될 때 키를 물으므로 여기서는 이동만 한다 -->
-          <a class="btn btn--ghost btn--sm" href="admin/index.html" title="관리자 페이지"> 🔐 관리자 </a>
+            <!-- 관리자 진입: 대시보드가 로드될 때 키를 물으므로 여기서는 이동만 한다 -->
+            <a class="btn btn--ghost btn--sm" href="admin/index.html" title="관리자 페이지">
+              🔐 관리자
+            </a>
+          </div>
 
-          <!-- 장바구니: data-cart-badge 는 CafeUtils.updateCartBadges 가 자동으로 채운다 -->
+          <!-- 장바구니: 모바일에서도 항상 보인다 (data-cart-badge 는 CafeUtils 가 채운다) -->
           <a class="site-header__cart" href="basket/list.html">
             <span aria-hidden="true">🧺</span>
             <span class="sr-only">장바구니</span>
             <span class="site-header__cart-count" data-cart-badge hidden>0</span>
           </a>
+
+          <!-- 햄버거 버튼 — 모바일에서만 보인다 (CSS 로 제어) -->
+          <button
+            class="site-header__toggle"
+            type="button"
+            data-nav-toggle
+            aria-label="메뉴 열기"
+            aria-expanded="false"
+            aria-controls="site-nav-links"
+          >
+            <span aria-hidden="true">☰</span>
+          </button>
         </nav>
       </div>
     </header>
