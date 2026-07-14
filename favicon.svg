@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="동해 카페">
+  <!--
+    🌊 동해 카페 파비콘 : 깊은 바다 위로 밀려오는 흰 물결.
+
+    ⚠️ 색을 hex 로 직접 쓴 이유 :
+       파비콘 SVG 는 문서와 분리되어 로드되므로 variables.css 의 CSS 변수가 닿지 않는다.
+       (이 파일에서만 예외 · 값은 variables.css 의 바다 팔레트를 그대로 옮겼다)
+
+       #0a2540 = sea-navy    #12508f = sea-cobalt
+       #4fc3d9 = sea-aqua    #a8e0ec = sea-sky    #ffffff = foam
+
+    ⚠️ XML 주석 안에는 이중 하이픈을 쓸 수 없어 변수명을 var 표기 없이 적었다.
+  -->
+  <defs>
+    <!-- 심해에서 코발트로 (grad-ocean 느낌) -->
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0a2540" />
+      <stop offset="1" stop-color="#12508f" />
+    </linearGradient>
+  </defs>
+
+  <!-- 물방울처럼 둥근 사각 배경 -->
+  <rect width="64" height="64" rx="14" fill="url(#sea)" />
+
+  <!-- 뒤 물결 (옅은 하늘색) -->
+  <path
+    d="M0 40 C 10 33, 22 47, 32 40 C 42 33, 54 47, 64 40 L64 64 L0 64 Z"
+    fill="#a8e0ec"
+    opacity="0.45"
+  />
+
+  <!-- 가운데 물결 (밝은 물빛) -->
+  <path
+    d="M0 46 C 10 39, 22 53, 32 46 C 42 39, 54 53, 64 46 L64 64 L0 64 Z"
+    fill="#4fc3d9"
+    opacity="0.75"
+  />
+
+  <!-- 앞 물결 (흰 거품) -->
+  <path
+    d="M0 53 C 10 47, 22 60, 32 53 C 42 46, 54 59, 64 53 L64 64 L0 64 Z"
+    fill="#ffffff"
+  />
+
+  <!-- 수면 위에 뜬 달 한 점 -->
+  <circle cx="46" cy="19" r="6" fill="#a8e0ec" opacity="0.9" />
+</svg>
