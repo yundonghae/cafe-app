@@ -23,6 +23,7 @@
 
   const statusStatsBox = $("[data-status-stats]");
   const recentBox = $("[data-recent]");
+  const rankingBox = $("[data-ranking]");
 
   /** 미리보기로 보여 줄 최근 주문 건수 */
   const RECENT_COUNT = 5;
@@ -125,6 +126,97 @@
   }
 
   /* ============================================
+     인기 메뉴 TOP 5 (판매 수량 랭킹)
+     ============================================ */
+
+  /** 랭킹에 보여 줄 개수 */
+  const RANK_COUNT = 5;
+
+  /** 1~3위에 붙일 메달 (4위부터는 숫자만) */
+  const MEDALS = ["🥇", "🥈", "🥉"];
+
+  /**
+   * 메뉴별 판매 수량을 집계해 상위 RANK_COUNT 개를 돌려준다.
+   *
+   * - **취소된 주문은 제외한다.** 실제로 팔린 게 아니므로 판매 실적에 넣지 않는다.
+   * - 집계는 `menuId` 로 묶고, **표시 이름은 order.items 의 name 스냅샷**을 쓴다.
+   *   getMenuById 로 다시 조회하지 않는 이유: 메뉴가 삭제·개명돼도
+   *   "그때 그 이름으로 이만큼 팔렸다"는 실적은 그대로 남아야 하기 때문이다.
+   *   getOrders() 는 최신순이므로 **처음 만난 이름 = 가장 최근 이름**을 쓴다.
+   */
+  function rankMenus() {
+    const tally = new Map(); // menuId → { name, qty }
+
+    getOrders().forEach((order) => {
+      if (order.status === "canceled") return; // 취소분은 판매가 아니다
+
+      (order.items || []).forEach((item) => {
+        const key = item.menuId || item.name; // menuId 가 없더라도 이름으로는 묶이게
+        const qty = Number(item.qty) || 0;
+        if (!key || qty <= 0) return;
+
+        const row = tally.get(key);
+        if (row) {
+          row.qty += qty; // 이름은 덮어쓰지 않는다 (먼저 본 = 더 최근 주문의 이름)
+        } else {
+          tally.set(key, { name: item.name, qty });
+        }
+      });
+    });
+
+    return [...tally.values()]
+      .sort((a, b) => b.qty - a.qty) // 판매 수량 내림차순
+      .slice(0, RANK_COUNT);
+  }
+
+  function renderRanking() {
+    const rows = rankMenus();
+
+    if (rows.length === 0) {
+      rankingBox.innerHTML = `
+        <div class="empty-state">
+          ${emptyStateHtml(
+            "bottle", // 아직 도착한 판매 기록이 없다
+            "아직 판매 데이터가 없습니다.",
+            "주문이 쌓이면 잘 팔리는 메뉴를 여기에 모아 보여 드립니다."
+          )}
+        </div>`;
+      return;
+    }
+
+    // 막대 길이는 1위 대비 비율 (1위가 항상 100%)
+    const top = rows[0].qty;
+
+    rankingBox.innerHTML = `
+      <ol class="ranking__list">
+        ${rows
+          .map((row, i) => {
+            const percent = Math.round((row.qty / top) * 100);
+            const medal = MEDALS[i] || "";
+
+            return `
+              <li class="ranking__item${i < MEDALS.length ? " ranking__item--top" : ""}">
+                <span class="ranking__rank" aria-hidden="true">${medal || i + 1}</span>
+
+                <div class="ranking__body">
+                  <div class="ranking__line">
+                    <span class="ranking__name">${escapeHtml(row.name)}</span>
+                    <strong class="ranking__qty">${row.qty}잔</strong>
+                  </div>
+                  <!-- 막대는 장식 — 수치는 위 텍스트로 이미 읽힌다 -->
+                  <div class="ranking__bar" aria-hidden="true">
+                    <span class="ranking__bar-fill" style="width: ${percent}%"></span>
+                  </div>
+                </div>
+
+                <span class="sr-only">${i + 1}위, ${escapeHtml(row.name)}, ${row.qty}잔 판매</span>
+              </li>`;
+          })
+          .join("")}
+      </ol>`;
+  }
+
+  /* ============================================
      초기화
      ============================================ */
 
@@ -136,5 +228,6 @@
   }
 
   renderStats();
+  renderRanking();
   renderRecent();
 })();
