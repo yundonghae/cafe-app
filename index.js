@@ -5,7 +5,7 @@
    ============================================ */
 
 (function () {
-  const { $, formatPrice, escapeHtml, showToast, addToCart } = window.CafeUtils;
+  const { $, formatPrice, escapeHtml, showToast, addToCart, emptyStateHtml } = window.CafeUtils;
   const { getCategories, getMenus, getMenuById, getCategoryById } = window.CafeData;
 
   const categoryBox = $('[data-categories]');
@@ -120,9 +120,11 @@
     if (menus.length === 0) {
       pickBox.innerHTML = `
         <div class="empty-state" style="grid-column: 1 / -1;">
-          <div class="empty-state__icon">🌊</div>
-          <p>지금은 물이 빠졌습니다.</p>
-          <p class="text-muted">잠시 후 다시 찾아와 주세요.</p>
+          ${emptyStateHtml(
+            'shell', // 빈 조개 — 물이 빠진 갯벌
+            '지금은 물이 빠졌습니다.',
+            '잠시 후 다시 찾아와 주세요.'
+          )}
         </div>`;
       return;
     }
