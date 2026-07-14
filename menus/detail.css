@@ -367,3 +367,111 @@
 .detail__head .fav-btn {
   margin-left: auto;
 }
+
+/* ============================================
+   연관 메뉴 추천 (같은 카테고리 크로스셀)
+   전역 .card 를 재사용하고 추천 전용 규칙만 덧붙인다.
+   색은 variables.css 변수만 사용 (새 hex 없음).
+   ============================================ */
+
+.related {
+  margin-top: var(--space-2xl);
+  padding-bottom: var(--space-2xl);
+}
+
+.related__head {
+  margin-bottom: var(--space-lg);
+}
+
+.related__title {
+  font-size: var(--fs-xl);
+}
+
+.related__sub {
+  margin-top: var(--space-xs);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.related__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-md);
+}
+
+/* 카드 전체가 그 메뉴 상세로 가는 링크다 */
+.related__card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.related__thumb {
+  display: block;
+  height: 120px;
+  background: var(--grad-surface); /* 이미지 로드 전/실패 시 수면 배경 */
+}
+
+.related__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.related__card:hover .related__thumb img {
+  transform: scale(1.04); /* 물결에 살짝 일렁이듯 */
+}
+
+.related__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+}
+
+.related__name {
+  font-weight: 600;
+  color: var(--color-text);
+  /* 긴 이름은 두 줄까지만 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.related__card:hover .related__name {
+  color: var(--color-accent);
+}
+
+.related__price {
+  color: var(--sea-cobalt);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================
+   반응형 — 좁은 화면에서는 가로 스크롤로 넘긴다
+   (2칸으로 쪼개면 카드가 너무 좁아져 이름이 뭉개진다)
+   ============================================ */
+
+@media (max-width: 600px) {
+  .related__grid {
+    display: flex;
+    gap: var(--space-sm);
+    overflow-x: auto;
+    /* 손가락으로 넘길 때 카드 단위로 딱 맞게 멈춘다 */
+    scroll-snap-type: x mandatory;
+    /* 카드 그림자가 잘리지 않도록 아래쪽 여백을 준다 */
+    padding-bottom: var(--space-sm);
+  }
+
+  .related__card {
+    flex: 0 0 45%;
+    scroll-snap-align: start;
+  }
+
+  .related__thumb {
+    height: 100px;
+  }
+}
