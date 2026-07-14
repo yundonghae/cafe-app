@@ -423,62 +423,47 @@ function statusChipHtml(status) {
 }
 
 /* ============================================
-   관리자 진입 가드 (referrer 기반)
+   관리자 진입 가드 (sessionStorage 세션 기반)
    ⚠️ 다시 강조: 진짜 인증이 아니라 실수 방지용 UX 장치다.
-   인증 상태를 어디에도 저장하지 않고, "직전 페이지가 어디였나" 로만 판단한다.
+
+   흐름:
+     - 관리자 페이지끼리 이동 → 세션 플래그가 살아 있어 묻지 않고 통과.
+     - **손님 페이지를 한 번이라도 거치면** js/header.js 가 플래그를 지운다.
+       (header.js 는 손님 7개 페이지만 로드하고 관리자 페이지는 로드하지 않는다)
+       → 손님을 거쳐 관리자로 들어가면 반드시 키를 다시 묻는다.
+     - 탭을 닫으면 sessionStorage 가 비므로 다음에 또 묻는다.
    ============================================ */
 
 /**
- * 직전 페이지(document.referrer)가 "같은 사이트의 관리자 페이지" 였는지 판단한다.
- * 외부 사이트 주소에 우연히 admin 이 들어 있을 수 있으므로,
- * 경로에 "/admin/" 이 있는지와 **출처(origin)가 현재 사이트와 같은지** 를 함께 본다.
- */
-function isFromAdminPage() {
-  const ref = document.referrer;
-  // 주소창 직접 입력 · 새 탭 · referrer 미전송 → 관리자 내부 이동이 아니다
-  if (!ref) return false;
-
-  try {
-    const url = new URL(ref);
-
-    // 이 서비스가 쓰이는 호스트 목록 (도메인 + 서버 IP).
-    // nginx 리다이렉트 때문에 referrer 가 IP 로 찍히는 경우가 있어,
-    // 도메인과 IP 를 모두 "같은 서버"로 인정한다.
-    const knownHosts = [
-      location.hostname, // 현재 접속한 호스트 (도메인이든 IP든)
-      "eastsea.newlecture.com", // 서비스 도메인
-      "59.18.34.179", // 서버 IP (nginx 리다이렉트 시 referrer 에 나타남)
-    ];
-
-    // referrer 의 호스트가 우리 서버가 아니면(진짜 외부 사이트) 거부
-    if (!knownHosts.includes(url.hostname)) return false;
-
-    // 우리 서버의 admin 경로에서 왔으면 관리자 내부 이동으로 인정
-    return url.pathname.includes("/admin/");
-  } catch {
-    return false; // 파싱할 수 없는 referrer 는 안전하게 거부한다
-  }
-}
-
-/**
  * 관리자 페이지 진입을 허용할지 판단한다. 모든 관리자 페이지 JS 최상단에서 호출한다.
- * - 직전 페이지가 같은 사이트의 관리자 페이지면 → 관리자 내부 이동으로 보고 묻지 않고 통과.
- * - 그 외(손님 페이지 · 외부 · 빈 referrer)면 → 키를 묻는다.
- *   맞으면 통과, 취소·오답이면 손님 홈으로 돌려보내고 false 를 반환한다.
+ * - 이 세션에서 이미 통과했으면 묻지 않고 바로 통과한다.
+ * - 아니면 키를 묻는다. 맞으면 세션에 표시하고 통과,
+ *   취소·오답이면 손님 홈으로 돌려보내고 false 를 반환한다.
  *   (오답일 때만 토스트로 안내하고, 취소는 조용히 보낸다)
- *
- * 인증 상태를 어디에도 저장하지 않으므로(sessionStorage · localStorage 미사용),
- * 손님 페이지에서 관리자로 넘어올 때는 **매번** 키를 묻는다.
  *
  * @param {string} homePath 인증 실패 시 돌아갈 손님 홈 경로 (호출 파일 기준 상대경로)
  * @returns {boolean} 통과하면 true, 막히면 false (호출부는 false 면 즉시 return 할 것)
  */
 function requireAdmin(homePath) {
-  if (isFromAdminPage()) return true; // 관리자 → 관리자 이동은 묻지 않는다
+  // 이미 이 세션에서 관리자 인증을 통과했으면 다시 묻지 않는다.
+  // (관리자 페이지 사이를 오갈 때는 계속 통과)
+  try {
+    if (sessionStorage.getItem("cafe.adminAuthed") === "true") return true;
+  } catch (e) {
+    /* sessionStorage 못 쓰는 환경이면 아래로 진행해 매번 묻는다 */
+  }
 
   const input = prompt("관리자 키를 입력하세요");
 
-  if (input === ADMIN_KEY) return true;
+  if (input === ADMIN_KEY) {
+    // 인증 성공 → 세션에 저장. 손님 페이지를 방문하면 header.js 가 이 값을 지운다.
+    try {
+      sessionStorage.setItem("cafe.adminAuthed", "true");
+    } catch (e) {
+      /* 저장 못 해도 통과는 시킨다 (이 페이지 한정) */
+    }
+    return true;
+  }
 
   // 틀린 경우에만 안내한다 (취소(null)는 조용히 돌려보낸다)
   if (input !== null) {

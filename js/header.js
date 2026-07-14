@@ -12,6 +12,16 @@
    ============================================ */
 
 (function () {
+  // 🔐 손님 페이지에 왔으니 관리자 세션 인증을 해제한다.
+  //    (이 파일은 손님 7개 페이지만 불러오고 관리자 페이지는 부르지 않는다.)
+  //    → 손님을 거쳐 관리자로 들어가면 반드시 키를 다시 묻게 된다.
+  //    ⚠️ 아래 "헤더 없으면 return" 가드보다 **먼저** 실행되어야 한다.
+  try {
+    sessionStorage.removeItem("cafe.adminAuthed");
+  } catch (e) {
+    /* sessionStorage 를 못 쓰는 환경이면 무시 */
+  }
+
   const toggle = document.querySelector("[data-nav-toggle]");
   const panel = document.querySelector("[data-nav-panel]");
 
