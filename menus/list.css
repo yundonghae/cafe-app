@@ -394,3 +394,47 @@
   right: var(--space-sm);
   z-index: 1;
 }
+
+/* ============================================
+   스크롤 등장 애니메이션 (JS 의 IntersectionObserver 와 연동)
+   카드가 뷰포트에 들어오면 아래에서 살짝 떠오르며 나타난다.
+
+   ⚠️ transform 을 "지속 선언"으로 두지 않는 이유:
+      variables.css 에 .card:hover { transform: translateY(-3px) } 가 있는데,
+      .is-visible { transform: none } 을 쓰면 특정도가 같고 이 파일이 나중에 로드돼
+      hover 로 떠오르는 효과가 죽어 버린다.
+      그래서 keyframes 로만 움직이고, 끝나면 transform 이 원래대로(none) 돌아가게 한다.
+   ============================================ */
+
+.menu-card.reveal {
+  opacity: 0; /* 등장 전에는 감춰 둔다 */
+}
+
+.menu-card.reveal.is-visible {
+  opacity: 1;
+  /* backwards: 시차(animation-delay) 동안에도 from 상태를 유지 →
+     먼저 보였다가 사라지는 깜빡임을 막는다. 끝난 뒤엔 fill 이 남지 않아 hover 가 산다. */
+  animation: card-rise 0.5s ease-out backwards;
+}
+
+@keyframes card-rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 접근성 — 동작 줄이기를 켠 사용자에게는 애니메이션 없이 즉시 보여 준다 */
+@media (prefers-reduced-motion: reduce) {
+  .menu-card.reveal {
+    opacity: 1;
+  }
+
+  .menu-card.reveal.is-visible {
+    animation: none;
+  }
+}
