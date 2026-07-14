@@ -7,7 +7,7 @@
   // 🔐 관리자 세션 가드 — 다른 로직보다 먼저. 통과 못 하면 렌더하지 않고 즉시 빠져나간다.
   if (!window.CafeUtils.requireAdmin("../../index.html")) return;
 
-  const { $, $$, formatPrice, escapeHtml, showToast } = window.CafeUtils;
+  const { $, $$, formatPrice, escapeHtml, showToast, emptyStateHtml } = window.CafeUtils;
   const { getMenus, getCategories, getCategoryById, getMenusByCategory, deleteMenu } =
     window.CafeData;
 
@@ -130,9 +130,11 @@
     if (menus.length === 0) {
       grid.innerHTML = `
         <div class="empty-state" style="grid-column: 1 / -1;">
-          <div class="empty-state__icon">🌊</div>
-          <p>수면 아래 아무것도 잡히지 않았습니다.</p>
-          <p class="text-muted">필터를 바꾸거나 새 메뉴를 띄워 보세요.</p>
+          ${emptyStateHtml(
+            "net", // 빈 그물 — 필터·검색에 아무것도 잡히지 않았다
+            "수면 아래 아무것도 잡히지 않았습니다.",
+            "필터를 바꾸거나 새 메뉴를 띄워 보세요."
+          )}
         </div>`;
       return;
     }

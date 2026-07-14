@@ -19,6 +19,7 @@
     updateOrderStatus,
     ORDER_STATUS,
     statusChipHtml,
+    emptyStateHtml,
   } = window.CafeUtils;
 
   const root = $("[data-detail]");
@@ -54,12 +55,12 @@
   function renderNotFound() {
     root.innerHTML = `
       <div class="card empty-state">
-        <div class="empty-state__icon">🧭</div>
-        <p>찾으시는 주문이 해류에 휩쓸려 사라졌습니다.</p>
-        <p class="text-muted">이미 지워졌거나 잘못된 주소일 수 있습니다.</p>
-        <p style="margin-top: var(--space-lg);">
-          <a class="btn btn--primary" href="./list.html">주문 목록 보러 가기</a>
-        </p>
+        ${emptyStateHtml(
+          "net", // 빈 그물 — 찾았지만 걸리지 않았다
+          "찾으시는 주문이 해류에 휩쓸려 사라졌습니다.",
+          "이미 지워졌거나 잘못된 주소일 수 있습니다.",
+          `<a class="btn btn--primary" href="./list.html">주문 목록 보러 가기</a>`
+        )}
       </div>`;
   }
 

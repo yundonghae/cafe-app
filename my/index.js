@@ -18,6 +18,7 @@
     getFavoriteMenus,
     toggleFavorite,
     favButtonHtml,
+    emptyStateHtml,
   } = window.CafeUtils;
 
   const profileBox = $("[data-profile]");
@@ -140,9 +141,11 @@
     if (orders.length === 0) {
       recentBox.innerHTML = `
         <div class="empty-state">
-          <div class="empty-state__icon">🧾</div>
-          <p>아직 주문 내역이 없습니다.</p>
-          <p class="text-muted">첫 잔을 골라 바다를 담아 보세요.</p>
+          ${emptyStateHtml(
+            "bottle", // 물결 위 유리병 — 아직 도착한 기록이 없다
+            "아직 주문 내역이 없습니다.",
+            "첫 잔을 골라 바다를 담아 보세요."
+          )}
         </div>`;
       return;
     }
@@ -198,12 +201,12 @@
     if (menus.length === 0) {
       favBox.innerHTML = `
         <div class="empty-state">
-          <div class="empty-state__icon">🤍</div>
-          <p>아직 찜한 메뉴가 없습니다.</p>
-          <p class="text-muted">마음에 드는 한 잔에 하트를 눌러 보세요.</p>
-          <p style="margin-top: var(--space-lg);">
-            <a class="btn btn--primary" href="../menus/list.html">메뉴 보러가기</a>
-          </p>
+          ${emptyStateHtml(
+            "shell", // 빈 조개 — 아직 아무것도 담지 않았다
+            "아직 찜한 메뉴가 없습니다.",
+            "마음에 드는 한 잔에 하트를 눌러 보세요.",
+            `<a class="btn btn--primary" href="../menus/list.html">메뉴 보러가기</a>`
+          )}
         </div>`;
       return;
     }

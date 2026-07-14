@@ -13,6 +13,7 @@
     showToast,
     getOrders,
     statusChipHtml,
+    emptyStateHtml,
   } = window.CafeUtils;
 
   const root = $("[data-orders]");
@@ -25,15 +26,16 @@
      ============================================ */
 
   /** 주문이 하나도 없을 때 — 메뉴 목록으로 안내한다 */
-  function emptyStateHtml() {
+  /* 이름이 CafeUtils.emptyStateHtml 과 겹치면 자기 자신을 부르게 되므로 따로 둔다 */
+  function emptyOrdersHtml() {
     return `
       <div class="card empty-state">
-        <div class="empty-state__icon">🧾</div>
-        <p>아직 주문한 내역이 없습니다.</p>
-        <p class="text-muted">첫 잔을 골라 바다를 담아 보세요.</p>
-        <p style="margin-top: var(--space-lg);">
-          <a class="btn btn--primary" href="../menus/list.html">메뉴 보러가기</a>
-        </p>
+        ${emptyStateHtml(
+          "bottle", // 물결 위 유리병 — 아직 도착한 기록이 없다
+          "아직 주문한 내역이 없습니다.",
+          "첫 잔을 골라 바다를 담아 보세요.",
+          `<a class="btn btn--primary" href="../menus/list.html">메뉴 보러가기</a>`
+        )}
       </div>`;
   }
 
@@ -83,7 +85,7 @@
     const orders = getOrders();
 
     if (orders.length === 0) {
-      root.innerHTML = emptyStateHtml();
+      root.innerHTML = emptyOrdersHtml();
       return;
     }
 

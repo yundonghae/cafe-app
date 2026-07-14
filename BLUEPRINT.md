@@ -268,6 +268,19 @@ cafe-app/
 - [ ] **헤더 공용화** — `.site-header`(고객 7페이지)와 `.admin-top`(관리자 7페이지)이
       각 CSS 에 인라인 복붙되어 있다. 코로케이션 원칙과 충돌하므로 공용화 여부를 결정할 것.
       (아래 햄버거 메뉴로 헤더 CSS 가 73줄 더 늘어 7곳에 복제됐다 — 공용화 필요성이 커졌다)
+- [x] **빈 상태(.empty-state) 바다 일러스트** — 이모지 하나뿐이던 빈 화면에 라인아트 SVG 를 넣었다.
+      - `utils.js` 에 **새 함수만** 추가(기존 함수 무수정): `emptyStateHtml(iconType, title, message, actionHtml)`
+        + 내부 `emptyArtHtml()` · `EMPTY_ART` 상수. **일러스트가 이 파일 한 곳에만 존재**한다.
+      - 모티브 3종: `shell`(빈 조개 — 담긴 게 없음) · `bottle`(물결 위 유리병 — 아직 기록 없음) ·
+        `net`(빈 그물 — 찾았지만 안 잡힘/못 찾음). 상황에 맞게 골라 쓴다.
+      - **바깥 래퍼(`<div class="empty-state">`)는 각 페이지가 그대로 유지**한다
+        (`card` / `grid-column` 등 클래스가 페이지마다 달라서). 헬퍼는 **안쪽 내용만** 만든다.
+      - ⚠️ 스타일을 **인라인**으로 둔 이유: 클래스로 빼면 콜로케이션 규약상 9개 CSS 에 전부 복제된다.
+        색은 `var(--sea-*)` 만 사용(새 hex 없음), SVG 는 장식이라 `aria-hidden="true"`.
+      - ⚠️ `basket/list.js` · `orders/list.js` 에는 **같은 이름의 로컬 함수**가 있어 그대로 두면
+        자기 자신을 호출(무한 재귀)한다 → `emptyBasketHtml` · `emptyOrdersHtml` 로 개명했다.
+      - 적용: 고객 6곳(메인·메뉴목록·메뉴상세·장바구니·주문목록·주문상세) + 마이페이지 2곳 +
+        관리자 6곳 = **14곳 전부**. 기존 문구·버튼·동작은 그대로 두고 아이콘만 일러스트로 교체.
 - [x] **메뉴 즐겨찾기(찜)** — 손님이 메뉴에 하트를 눌러 찜하고 마이페이지에서 모아 본다.
       - `utils.js` 에 **새 함수만** 추가(기존 함수 무수정): `getFavorites` · `isFavorite` ·
         `toggleFavorite`(토글 후 상태 반환) · `getFavoriteMenus` · `favButtonHtml`(하트 마크업).
