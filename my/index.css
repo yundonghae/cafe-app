@@ -526,3 +526,143 @@
     align-items: stretch;
   }
 }
+
+/* ============================================
+   찜 하트 버튼 (공통)
+   ❤️/🤍 는 이모지라 색을 지정하지 않는다. 배경·테두리만 변수로 처리.
+   ============================================ */
+
+.fav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex: none;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  font-size: var(--fs-sm);
+  line-height: 1;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.fav-btn:hover {
+  transform: scale(1.12);
+  box-shadow: var(--shadow-md);
+}
+
+.fav-btn:active {
+  transform: scale(0.95);
+}
+
+/* 찜된 상태 — 물빛 테두리로 눌림을 한 번 더 알린다 */
+.fav-btn--on {
+  border-color: var(--color-accent);
+}
+
+/* ============================================
+   찜한 메뉴 목록
+   ============================================ */
+
+.favorites {
+  padding: var(--space-lg);
+}
+
+/* 정보 패널이 hover 마다 들썩이지 않도록 .card 의 이동 효과만 끈다 */
+.favorites:hover {
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.favorites__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.favorites__head .btn {
+  color: var(--color-accent);
+}
+
+.fav-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* 카드 안의 줄이라 .card 대신 옅은 배경만 쓴다 (최근 주문 항목과 같은 톤) */
+.fav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  transition: border-color var(--transition);
+}
+
+.fav-item:hover {
+  border-color: var(--color-accent);
+}
+
+.fav-item__thumb {
+  position: relative;
+  width: 3rem;
+  height: 3rem;
+  flex: none;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--grad-surface);
+}
+
+.fav-item__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 품절이면 수면 아래로 가라앉은 듯 어둡게 */
+.fav-item--soldout .fav-item__thumb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--glass-bg-deep);
+}
+
+.fav-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0; /* 긴 이름이 하트를 밀어내지 않도록 */
+  flex: 1;
+}
+
+.fav-item__name {
+  font-size: var(--fs-md);
+}
+
+.fav-item__name a:hover {
+  color: var(--color-accent);
+}
+
+.fav-item__price {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--sea-cobalt);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 카드 안에 들어가는 빈 상태는 여백을 줄인다 */
+.favorites .empty-state {
+  padding: var(--space-lg) var(--space-sm);
+}
+
+.favorites .empty-state__icon {
+  font-size: var(--fs-2xl);
+  margin-bottom: var(--space-sm);
+}

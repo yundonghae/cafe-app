@@ -15,10 +15,14 @@
     saveUser,
     getOrders,
     statusChipHtml,
+    getFavoriteMenus,
+    toggleFavorite,
+    favButtonHtml,
   } = window.CafeUtils;
 
   const profileBox = $("[data-profile]");
   const recentBox = $("[data-recent]");
+  const favBox = $("[data-favorites]");
   const nameForm = $("[data-name-form]");
   const nameInput = $("[data-name-input]");
 
@@ -150,6 +154,84 @@
   }
 
   /* ============================================
+     렌더 - 찜한 메뉴
+     ============================================ */
+
+  /** http(s) 주소만 통과시켜 위험한 스킴을 막는다 (다른 페이지와 동일) */
+  function safeImageUrl(url) {
+    return /^https?:\/\//i.test(String(url || "")) ? url : "";
+  }
+
+  /** 찜한 메뉴 한 줄 (하트를 다시 누르면 해제되고 목록에서 사라진다) */
+  function favItemHtml(menu) {
+    const detailUrl = `../menus/detail.html?id=${encodeURIComponent(menu.id)}`;
+    const image = safeImageUrl(menu.image);
+
+    return `
+      <article class="fav-item${menu.soldOut ? " fav-item--soldout" : ""}">
+        <a class="fav-item__thumb" href="${detailUrl}"
+           aria-label="${escapeHtml(menu.name)} 상세 보기">
+          ${
+            image
+              ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(menu.name)}"
+                   loading="lazy" onerror="this.style.display='none'">`
+              : ""
+          }
+        </a>
+
+        <div class="fav-item__info">
+          <h3 class="fav-item__name">
+            <a href="${detailUrl}">${escapeHtml(menu.name)}</a>
+          </h3>
+          <p class="fav-item__price">${formatPrice(menu.price)}</p>
+          ${menu.soldOut ? `<span class="chip chip--danger">품절</span>` : ""}
+        </div>
+
+        ${favButtonHtml(menu.id)}
+      </article>`;
+  }
+
+  function renderFavorites() {
+    // 사장님이 지운 메뉴는 getFavoriteMenus 가 이미 걸러 준다
+    const menus = getFavoriteMenus();
+
+    if (menus.length === 0) {
+      favBox.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state__icon">🤍</div>
+          <p>아직 찜한 메뉴가 없습니다.</p>
+          <p class="text-muted">마음에 드는 한 잔에 하트를 눌러 보세요.</p>
+          <p style="margin-top: var(--space-lg);">
+            <a class="btn btn--primary" href="../menus/list.html">메뉴 보러가기</a>
+          </p>
+        </div>`;
+      return;
+    }
+
+    favBox.innerHTML = `
+      <div class="fav-list">
+        ${menus.map(favItemHtml).join("")}
+      </div>`;
+  }
+
+  /* ============================================
+     이벤트 - 찜 해제 (이벤트 위임 → 다시 그려도 동작)
+     ============================================ */
+
+  favBox.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-fav]");
+    if (!btn) return;
+
+    const menuId = btn.dataset.fav;
+    const menu = getFavoriteMenus().find((m) => m.id === menuId);
+
+    toggleFavorite(menuId);
+    // 이 화면은 "찜한 것만" 보여 주므로, 해제하면 목록에서 사라져야 한다 → 다시 그린다
+    renderFavorites();
+    showToast(menu ? `'${menu.name}' 찜을 해제했습니다.` : "찜을 해제했습니다.");
+  });
+
+  /* ============================================
      이벤트 - 이름 수정
      ============================================ */
 
@@ -197,4 +279,5 @@
   renderProfile(user);
   syncNameInput(user);
   renderRecent();
+  renderFavorites();
 })();

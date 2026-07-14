@@ -268,6 +268,20 @@ cafe-app/
 - [ ] **헤더 공용화** — `.site-header`(고객 7페이지)와 `.admin-top`(관리자 7페이지)이
       각 CSS 에 인라인 복붙되어 있다. 코로케이션 원칙과 충돌하므로 공용화 여부를 결정할 것.
       (아래 햄버거 메뉴로 헤더 CSS 가 73줄 더 늘어 7곳에 복제됐다 — 공용화 필요성이 커졌다)
+- [x] **메뉴 즐겨찾기(찜)** — 손님이 메뉴에 하트를 눌러 찜하고 마이페이지에서 모아 본다.
+      - `utils.js` 에 **새 함수만** 추가(기존 함수 무수정): `getFavorites` · `isFavorite` ·
+        `toggleFavorite`(토글 후 상태 반환) · `getFavoriteMenus` · `favButtonHtml`(하트 마크업).
+      - 저장은 `localStorage["cafe.favorites"]` 에 **menuId 배열**. `data.js` 의 `STORAGE_KEYS` 는
+        수정 금지라, 키 리터럴을 `utils.js` 안 `FAVORITES_KEY` **한 곳**에만 둔다.
+      - `getFavoriteMenus()` 는 사장님이 지운 메뉴(`getMenuById` → `null`)를 걸러낸다
+        (`getCartDetail` 과 같은 방어 패턴). 저장값이 배열이 아니어도 빈 배열로 처리한다.
+      - 하트는 `menus/list.js`(카드 우상단) · `menus/detail.js`(머리말) · `my/index.js`(찜 목록)에서
+        **이벤트 위임 + `[data-fav]`** 로 처리한다. 목록/상세에서는 **누른 버튼만 갱신**해
+        재렌더로 스크롤·수량이 튀지 않게 했다.
+      - ⚠️ `menus/detail.js` 의 클릭 핸들러는 품절이면 조기 `return` 하므로,
+        **하트 분기를 `soldOut` 가드보다 앞에** 뒀다 (품절 메뉴도 찜할 수 있어야 하므로).
+      - 마이페이지에 `#favorites` 찜 섹션 추가(비면 `.empty-state`). 헤더 내비의 `❤️ 찜` 링크가
+        `my/index.html#favorites` 로 연결된다 — `.site-header__links` 안에 넣어 **햄버거에도 자동 반영**.
 - [x] **모바일 헤더 햄버거 메뉴** — 내비 링크가 6개로 늘며 좁은 화면에서 로고가 세로로 깨지고
       링크가 화면 밖으로 밀리던 문제를 해결했다.
       - **데스크톱(769px~)은 기존 그대로** — 링크 5개 가로 배치 + 🧺.
