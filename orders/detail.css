@@ -353,3 +353,144 @@
     width: 100%;
   }
 }
+
+/* ============================================
+   주문 진행 바 (접수 → 제조중 → 완료)
+   채움 여부는 JS 가 붙이는 --done / --now / --todo 로만 결정된다.
+   색은 variables.css 변수만 사용 (새 hex 없음).
+   ============================================ */
+
+.order-progress {
+  display: flex;
+  padding: var(--space-lg) var(--space-md);
+}
+
+/* 다른 정보 패널과 마찬가지로 .card 의 hover 이동 효과는 끈다 */
+.order-progress:hover {
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.order-progress__step {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  text-align: center;
+}
+
+/* 연결선 — 이전 단계와 잇는다. 첫 단계 왼쪽에는 선이 없다. */
+.order-progress__step::before {
+  content: "";
+  position: absolute;
+  top: 1rem; /* 원(2rem)의 세로 한가운데 */
+  left: -50%;
+  right: 50%;
+  height: 3px;
+  border-radius: var(--radius-full);
+  background: var(--color-border); /* 아직 도달하지 않은 구간 */
+}
+
+.order-progress__step:first-child::before {
+  display: none;
+}
+
+/* 도달한 단계(지나온·현재)의 왼쪽 선만 색칠 → 진행한 만큼 물길이 이어진다 */
+.order-progress__step--done::before,
+.order-progress__step--now::before {
+  background: var(--sea-cobalt);
+}
+
+/* --- 단계 원 --- */
+.order-progress__dot {
+  position: relative; /* 연결선 위로 올린다 */
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* 지나온 단계 · 현재 단계는 깊은 바다색으로 채운다 */
+.order-progress__step--done .order-progress__dot,
+.order-progress__step--now .order-progress__dot {
+  background: var(--grad-ocean);
+  border-color: transparent;
+  color: var(--foam);
+}
+
+/* 현재 단계는 물빛으로 한 번 더 강조 */
+.order-progress__step--now .order-progress__dot {
+  box-shadow: var(--glow-aqua);
+}
+
+/* --- 단계 라벨 (색맹 대응: 색 외에 텍스트·✓·번호로도 구분된다) --- */
+.order-progress__label {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.order-progress__step--done .order-progress__label,
+.order-progress__step--now .order-progress__label {
+  color: var(--sea-navy);
+  font-weight: 600;
+}
+
+/* ============================================
+   취소된 주문 — 스텝퍼 대신 명확한 취소 표시
+   ============================================ */
+
+.order-progress--canceled {
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+}
+
+.order-progress__cancel-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
+  border-radius: var(--radius-full);
+  background: var(--color-danger);
+  color: var(--foam);
+  font-weight: 700;
+}
+
+.order-progress__cancel-title {
+  font-weight: 700;
+  color: var(--color-danger);
+}
+
+.order-progress__cancel-note {
+  margin-top: var(--space-xs);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+/* ============================================
+   반응형 — 좁아도 3단계를 가로로 유지한다
+   ============================================ */
+
+@media (max-width: 600px) {
+  .order-progress {
+    padding: var(--space-lg) var(--space-sm);
+  }
+
+  /* 라벨이 두 줄로 깨지지 않게 살짝 줄인다 */
+  .order-progress__label {
+    font-size: var(--fs-xs);
+  }
+}

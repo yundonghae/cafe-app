@@ -53,6 +53,73 @@
       </tr>`;
   }
 
+  /* ============================================
+     주문 진행 바 (접수 → 제조중 → 완료)
+     ============================================ */
+
+  /**
+   * 정상 진행 흐름. **배열의 순서가 곧 진행 단계**다.
+   * 값은 utils.js 의 ORDER_STATUS 키를 그대로 쓴다 (상태 흐름 자체는 건드리지 않는다).
+   * canceled 는 정상 흐름에서 벗어난 상태라 여기 넣지 않는다.
+   */
+  const FLOW = ["pending", "making", "done"];
+
+  /**
+   * 진행 바 마크업.
+   *
+   * 단계 판정: 현재 status 가 FLOW 의 **몇 번째 인덱스**인지로만 정한다.
+   *   current = FLOW.indexOf(order.status)
+   *   - i <  current → 이미 지나온 단계 (채움 + ✓)
+   *   - i === current → 지금 단계      (채움 + 물빛 강조 + aria-current)
+   *   - i >  current → 아직 안 온 단계 (빈 원 + 회색 선)
+   * 연결선은 "그 단계에 도달했는가"로 칠하므로 CSS 에서 done/now 단계의 왼쪽 선만 색칠한다.
+   */
+  function progressHtml(order) {
+    // 취소는 흐름 밖이라 스텝퍼에 억지로 끼우지 않고 별도 안내로 대체한다
+    if (order.status === "canceled") {
+      return `
+        <div class="card order-progress order-progress--canceled" role="status">
+          <span class="order-progress__cancel-icon" aria-hidden="true">✕</span>
+          <div>
+            <p class="order-progress__cancel-title">주문이 취소되었습니다.</p>
+            <p class="order-progress__cancel-note">
+              취소된 주문은 되돌릴 수 없습니다. 새로 주문해 주세요.
+            </p>
+          </div>
+        </div>`;
+    }
+
+    const current = FLOW.indexOf(order.status);
+    // 흐름에 없는 값(사장님이 임의 상태를 넣은 경우)이면 억지로 그리지 않는다 — 상태 칩은 그대로 뜬다
+    if (current < 0) return "";
+
+    const steps = FLOW.map((key, i) => {
+      const label = ORDER_STATUS[key] ? ORDER_STATUS[key].label : key;
+
+      const passed = i < current; // 지나온 단계
+      const isNow = i === current; // 지금 단계
+      const state = passed ? "done" : isNow ? "now" : "todo";
+
+      // 색만으로 구분하지 않는다 — 지나온 단계는 ✓, 나머지는 단계 번호
+      const mark = passed ? "✓" : String(i + 1);
+      // 스크린리더에는 상태를 말로 알려 준다
+      const srState = passed ? "완료됨" : isNow ? "진행 중" : "대기";
+
+      return `
+        <li class="order-progress__step order-progress__step--${state}"
+            ${isNow ? 'aria-current="step"' : ""}>
+          <span class="order-progress__dot" aria-hidden="true">${mark}</span>
+          <span class="order-progress__label">${escapeHtml(label)}</span>
+          <span class="sr-only">(${srState})</span>
+        </li>`;
+    }).join("");
+
+    return `
+      <ol class="card order-progress" aria-label="주문 진행 상태">
+        ${steps}
+      </ol>`;
+  }
+
   function renderDetail(order) {
     const cancelable = order.status === CANCELABLE;
 
@@ -79,6 +146,9 @@
             ${statusChipHtml(order.status)}
           </div>
         </div>
+
+        <!-- 진행 바 (접수 → 제조중 → 완료 / 취소면 취소 안내) -->
+        ${progressHtml(order)}
 
         <!-- 담긴 메뉴 내역 -->
         <div class="card order-items">
