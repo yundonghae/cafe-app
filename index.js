@@ -5,7 +5,8 @@
    ============================================ */
 
 (function () {
-  const { $, formatPrice, escapeHtml, showToast, addToCart, emptyStateHtml } = window.CafeUtils;
+  const { $, formatPrice, escapeHtml, showToast, addToCart, emptyStateHtml, isMotionOff, toggleMotion } =
+    window.CafeUtils;
   const { getCategories, getMenus, getMenuById, getCategoryById } = window.CafeData;
 
   const categoryBox = $('[data-categories]');
@@ -202,14 +203,23 @@
   /** 자동 넘김 간격 */
   const AUTOPLAY_MS = 4500;
 
-  /** 동작 줄이기 설정이면 자동 넘김을 아예 켜지 않는다 (수동 조작은 그대로) */
-  const reduceMotion =
+  /** 기기의 동작 줄이기 설정 (한 번만 읽는다) */
+  const deviceReduceMotion =
     typeof window.matchMedia === 'function' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /**
+   * 자동 넘김을 켜면 안 되는 상태인가.
+   * 기기 설정 OR 사용자가 애니메이션 토글 버튼으로 끈 경우.
+   *
+   * ⚠️ CSS 의 .reduce-motion 은 animation/transition 의 "길이"만 0 으로 만든다.
+   *    setInterval 로 도는 자동 넘김은 CSS 로 멈출 수 없어, 여기서 따로 확인한다.
+   */
+  const motionDisabled = () => deviceReduceMotion || isMotionOff();
+
   let bannerIndex = 0;
   let bannerTimer = null;
-  let bannerStopped = reduceMotion; // 멈춤 버튼 또는 동작 줄이기로 정지 상태인가
+  let bannerStopped = motionDisabled(); // 멈춤 버튼 또는 동작 줄이기로 정지 상태인가
   let bannerSlides = [];
   let bannerDots = [];
   let bannerTrack = null;
@@ -483,6 +493,35 @@
   if (flash) {
     sessionStorage.removeItem('cafe.flash');
     showToast(flash, 'success');
+  }
+
+  /* ============================================
+     애니메이션 켜기/끄기 버튼
+     실제 적용(<html>.reduce-motion + localStorage)은 CafeUtils 가 담당하고,
+     여기서는 버튼의 문구·aria 상태만 맞춘다.
+     ============================================ */
+
+  const motionBtn = $("[data-motion-toggle]");
+
+  /** 현재 상태를 버튼에 반영한다 (off = 애니메이션 꺼짐) */
+  function syncMotionButton(off) {
+    motionBtn.textContent = off ? "🌊 애니메이션 켜기" : "🌊 애니메이션 끄기";
+    // 버튼이 "눌린 상태" = 애니메이션을 끈 상태
+    motionBtn.setAttribute("aria-pressed", String(off));
+  }
+
+  if (motionBtn) {
+    // 저장된 설정을 읽어 문구를 맞춘다 (utils.js 가 이미 <html> 클래스는 반영했다)
+    syncMotionButton(isMotionOff());
+
+    motionBtn.addEventListener("click", () => {
+      syncMotionButton(toggleMotion()); // 토글 후 상태를 그대로 받아 반영
+
+      // 배너 자동 넘김은 setInterval 이라 CSS 로 못 멈춘다 → 여기서 함께 맞춘다
+      bannerStopped = motionDisabled();
+      syncToggleButton(); // 배너의 멈춤/재생 버튼 표시도 같이 갱신
+      startAutoplay(); // 꺼진 상태면 내부에서 타이머를 걸지 않는다
+    });
   }
 
   renderBanner();

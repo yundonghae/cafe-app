@@ -88,6 +88,23 @@
             <a class="btn btn--primary btn--lg" href="menus/list.html">메뉴 보러가기</a>
             <a class="btn btn--outline btn--lg hero__ghost" href="orders/list.html"> 주문 내역 </a>
           </div>
+
+          <!--
+            애니메이션 켜기/끄기 — 상태는 localStorage 에 저장되어
+            모든 페이지·새로고침에서 유지된다 (utils.js 의 initMotion 이 반영).
+            버튼 문구·aria-pressed 는 index.js 가 현재 상태로 맞춘다.
+            새 CSS 없이 기존 .btn / .hero__ghost 를 재사용한다.
+          -->
+          <div class="hero__actions">
+            <button
+              class="btn btn--outline btn--sm hero__ghost"
+              type="button"
+              data-motion-toggle
+              aria-pressed="false"
+            >
+              🌊 애니메이션 끄기
+            </button>
+          </div>
         </div>
         <!--
           수면 물결 (순수 장식이라 스크린리더에서 숨김 · 포커스도 받지 않음).

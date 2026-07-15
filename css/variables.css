@@ -6,19 +6,19 @@
 
 :root {
   /* --- 바다 팔레트 (깊은 곳 → 얕은 곳) --- */
-  --sea-abyss: #04182b;      /* 심해 (가장 진한 텍스트) */
-  --sea-navy: #0a2540;       /* 딥오션 네이비 */
-  --sea-cobalt: #12508f;     /* 코발트 블루 */
-  --sea-teal: #1a8a9c;       /* 청록 */
-  --sea-aqua: #4fc3d9;       /* 밝은 물빛 */
-  --sea-sky: #a8e0ec;        /* 밝은 하늘색 (얕은 수면) */
-  --sea-mist: #e4f4f8;       /* 물안개 (밝은 배경) */
+  --sea-abyss: #04182b; /* 심해 (가장 진한 텍스트) */
+  --sea-navy: #0a2540; /* 딥오션 네이비 */
+  --sea-cobalt: #12508f; /* 코발트 블루 */
+  --sea-teal: #1a8a9c; /* 청록 */
+  --sea-aqua: #4fc3d9; /* 밝은 물빛 */
+  --sea-sky: #a8e0ec; /* 밝은 하늘색 (얕은 수면) */
+  --sea-mist: #e4f4f8; /* 물안개 (밝은 배경) */
 
   /* --- 포인트 --- */
-  --foam: #ffffff;           /* 파도 흰 거품 */
-  --foam-soft: #f4fbfd;      /* 옅은 거품 */
-  --sand: #e8d8bd;           /* 모래빛 베이지 */
-  --sand-deep: #c9ae86;      /* 젖은 모래 */
+  --foam: #ffffff; /* 파도 흰 거품 */
+  --foam-soft: #f4fbfd; /* 옅은 거품 */
+  --sand: #e8d8bd; /* 모래빛 베이지 */
+  --sand-deep: #c9ae86; /* 젖은 모래 */
 
   /* --- 시맨틱 컬러 --- */
   --color-primary: var(--sea-cobalt);
@@ -32,9 +32,9 @@
   --color-border: #cfe6ee;
 
   /* --- 상태 컬러 --- */
-  --color-success: #2a9d6f;   /* 해조 그린 */
-  --color-warning: #dfa03a;   /* 모래 노랑 */
-  --color-danger: #d1543f;    /* 산호 레드 */
+  --color-success: #2a9d6f; /* 해조 그린 */
+  --color-warning: #dfa03a; /* 모래 노랑 */
+  --color-danger: #d1543f; /* 산호 레드 */
   --color-info: var(--sea-cobalt);
 
   /* --- 그라데이션 (수면 느낌) --- */
@@ -44,7 +44,7 @@
 
   /* --- 글래스모피즘 (물결/물방울 질감) --- */
   --glass-bg: rgba(255, 255, 255, 0.5);
-  --glass-bg-deep: rgba(10, 37, 64, 0.42);  /* 어두운 배경 위 유리 */
+  --glass-bg-deep: rgba(10, 37, 64, 0.42); /* 어두운 배경 위 유리 */
   --glass-border: rgba(255, 255, 255, 0.6);
   --glass-blur: 14px;
 
@@ -69,8 +69,7 @@
   --space-2xl: 64px;
 
   /* --- 타이포 --- */
-  --font-sans: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, sans-serif;
+  --font-sans: 'Pretendard', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --fs-xs: 0.75rem;
   --fs-sm: 0.875rem;
   --fs-md: 1rem;
@@ -159,7 +158,12 @@ ol {
   list-style: none;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   line-height: 1.25;
   font-weight: 700;
   color: var(--sea-navy);
@@ -207,7 +211,9 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
-  transition: transform var(--transition), box-shadow var(--transition);
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition);
 }
 
 .card:hover {
@@ -225,8 +231,11 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--radius-full);
   font-weight: 600;
   font-size: var(--fs-sm);
-  transition: background var(--transition), transform var(--transition),
-    box-shadow var(--transition), color var(--transition),
+  transition:
+    background var(--transition),
+    transform var(--transition),
+    box-shadow var(--transition),
+    color var(--transition),
     border-color var(--transition);
   white-space: nowrap;
 }
@@ -270,7 +279,9 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--foam);
 }
 
-.btn--block { width: 100%; }
+.btn--block {
+  width: 100%;
+}
 
 .btn--sm {
   padding: 0.4rem 0.85rem;
@@ -316,17 +327,29 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .chip::before {
-  content: "";
+  content: '';
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: currentColor;
 }
 
-.chip--warning { color: var(--color-warning); background: rgba(223, 160, 58, 0.14); }
-.chip--info    { color: var(--color-info);    background: rgba(18, 80, 143, 0.12); }
-.chip--success { color: var(--color-success); background: rgba(42, 157, 111, 0.14); }
-.chip--danger  { color: var(--color-danger);  background: rgba(209, 84, 63, 0.14); }
+.chip--warning {
+  color: var(--color-warning);
+  background: rgba(223, 160, 58, 0.14);
+}
+.chip--info {
+  color: var(--color-info);
+  background: rgba(18, 80, 143, 0.12);
+}
+.chip--success {
+  color: var(--color-success);
+  background: rgba(42, 157, 111, 0.14);
+}
+.chip--danger {
+  color: var(--color-danger);
+  background: rgba(209, 84, 63, 0.14);
+}
 
 /* 입력 필드 */
 .field {
@@ -349,7 +372,9 @@ h1, h2, h3, h4, h5, h6 {
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
-  transition: border-color var(--transition), box-shadow var(--transition);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
 }
 
 .input::placeholder,
@@ -392,7 +417,9 @@ h1, h2, h3, h4, h5, h6 {
   transition: background var(--transition);
 }
 
-.qty-stepper__btn:hover { background: var(--sea-mist); }
+.qty-stepper__btn:hover {
+  background: var(--sea-mist);
+}
 
 .qty-stepper__value {
   min-width: 1.5rem;
@@ -402,13 +429,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* 헬퍼 */
-.text-muted { color: var(--color-text-muted); }
-.text-accent { color: var(--color-accent); }
-.text-center { text-align: center; }
+.text-muted {
+  color: var(--color-text-muted);
+}
+.text-accent {
+  color: var(--color-accent);
+}
+.text-center {
+  text-align: center;
+}
 .sr-only {
   position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
@@ -430,20 +465,19 @@ h1, h2, h3, h4, h5, h6 {
 
 /* 스켈레톤 / 로딩 (물결이 흐르는 듯한 shimmer) */
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--sea-mist) 25%,
-    var(--foam) 50%,
-    var(--sea-mist) 75%
-  );
+  background: linear-gradient(90deg, var(--sea-mist) 25%, var(--foam) 50%, var(--sea-mist) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
   border-radius: var(--radius-md);
 }
 
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* ============================================
@@ -473,13 +507,25 @@ h1, h2, h3, h4, h5, h6 {
   animation: toast-in 0.25s ease;
 }
 
-.toast--success { background: var(--color-success); }
-.toast--danger  { background: var(--color-danger); }
-.toast--warning { background: var(--color-warning); }
+.toast--success {
+  background: var(--color-success);
+}
+.toast--danger {
+  background: var(--color-danger);
+}
+.toast--warning {
+  background: var(--color-warning);
+}
 
 @keyframes toast-in {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -490,4 +536,15 @@ h1, h2, h3, h4, h5, h6 {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* 사용자가 직접 끈 경우 — utils.js 가 <html> 에 .reduce-motion 을 붙인다.
+   위 @media(기기 설정)는 그대로 두고, 같은 내용을 클래스에도 적용한다.
+   → 기기 설정이 켜져 있으면 저장값과 무관하게 계속 꺼진 상태로 동작한다. */
+html.reduce-motion *,
+html.reduce-motion *::before,
+html.reduce-motion *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
 }

@@ -474,6 +474,56 @@ function requireAdmin(homePath) {
 }
 
 /* ============================================
+   애니메이션 켜기/끄기 (사용자 토글)
+
+   저장: localStorage "cafe.motionOff" ("true" = 사용자가 껐다)
+   적용: <html> 에 .reduce-motion 클래스 → variables.css 의 전역 규칙이
+         모든 animation/transition 을 0.01ms 로 만든다.
+         utils.js 는 전 페이지 공통이므로, 아래 initMotion() 을 로드 즉시 호출해
+         **모든 페이지에서 자동으로** 저장된 설정이 반영된다.
+
+   ⚠️ 기기 설정(prefers-reduced-motion: reduce)을 켠 사용자는
+      localStorage 에 아무것도 없어도 이미 애니메이션이 꺼져 있다 (미디어쿼리가 처리).
+      버튼의 표시 상태는 **localStorage 값 기준**이라, 그런 사용자에게는
+      버튼이 "끄기"로 보여도 실제로는 이미 꺼져 있을 수 있다.
+      (기기 설정을 코드로 뒤집지 않는 게 맞으므로 의도한 동작이다)
+   ============================================ */
+
+const MOTION_OFF_KEY = "cafe.motionOff";
+
+/** 사용자가 직접 끈 상태인가 (기기 설정과는 별개) */
+function isMotionOff() {
+  try {
+    return localStorage.getItem(MOTION_OFF_KEY) === "true";
+  } catch (e) {
+    return false; // localStorage 를 못 쓰는 환경이면 켜진 것으로 본다
+  }
+}
+
+/** 저장된 설정을 <html> 클래스에 반영한다 (페이지 로드 시 자동 실행) */
+function initMotion() {
+  document.documentElement.classList.toggle("reduce-motion", isMotionOff());
+}
+
+/** 애니메이션을 켜고 끈다. 토글 뒤의 상태를 반환한다 (true = 꺼짐) */
+function toggleMotion() {
+  const off = !isMotionOff();
+
+  try {
+    localStorage.setItem(MOTION_OFF_KEY, off ? "true" : "false");
+  } catch (e) {
+    /* 저장을 못 해도 이 페이지에서는 아래 클래스 반영으로 즉시 적용된다 */
+  }
+
+  document.documentElement.classList.toggle("reduce-motion", off);
+  return off;
+}
+
+// 저장된 설정을 즉시 반영한다. (defer 로 로드되므로 <html> 은 이미 존재한다)
+// DOMContentLoaded 를 기다리지 않아야 애니메이션이 잠깐 튀지 않는다.
+initMotion();
+
+/* ============================================
    전역 노출
    ============================================ */
 
@@ -509,6 +559,10 @@ window.CafeUtils = {
   saveUser,
   // 관리자 진입 가드 (세션 단위 · 실수 방지용)
   requireAdmin,
+  // 애니메이션 켜기/끄기
+  isMotionOff,
+  toggleMotion,
+  initMotion,
   // 즐겨찾기(찜)
   getFavorites,
   isFavorite,

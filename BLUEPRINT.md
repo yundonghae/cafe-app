@@ -268,6 +268,21 @@ cafe-app/
 - [ ] **헤더 공용화** — `.site-header`(고객 7페이지)와 `.admin-top`(관리자 7페이지)이
       각 CSS 에 인라인 복붙되어 있다. 코로케이션 원칙과 충돌하므로 공용화 여부를 결정할 것.
       (아래 햄버거 메뉴로 헤더 CSS 가 73줄 더 늘어 7곳에 복제됐다 — 공용화 필요성이 커졌다)
+- [x] **애니메이션 켜기/끄기 토글** — 메인 히어로에 버튼 하나로 사이트 전체 애니메이션을 끈다.
+      상태는 `localStorage["cafe.motionOff"]` 에 저장되어 **모든 페이지·새로고침에서 유지**된다.
+      - `css/variables.css` — 기존 `@media (prefers-reduced-motion: reduce)` 블록은 **그대로 두고**,
+        같은 내용을 `html.reduce-motion` 클래스에도 적용하는 규칙만 추가.
+        → 기기 설정은 계속 존중되고(설정이 켜진 사용자는 처음부터 꺼진 상태), 버튼은 그 위에 얹힌다.
+      - `js/utils.js` — **새 함수만** 추가: `isMotionOff()` · `toggleMotion()` · `initMotion()`.
+        `initMotion()` 은 utils.js 로드 즉시 실행되므로, **utils.js 를 쓰는 전 페이지에 자동 반영**된다
+        (`<html>` 에 `.reduce-motion` 을 붙이는 방식이라 페이지별 CSS 수정이 전혀 필요 없다).
+      - `index.html` / `index.js` — 히어로에 토글 버튼(`data-motion-toggle`, `aria-pressed`).
+        기존 `.btn` / `.hero__ghost` 를 재사용해 **새 CSS 없음**.
+      - ⚠️ **CSS 만으로는 부족했다.** `.reduce-motion` 은 animation/transition 의 *길이*만 0 으로 만든다.
+        `setInterval` 로 도는 **배너 자동 넘김은 CSS 로 멈출 수 없어**, `index.js` 배너의 정지 판정을
+        `기기 설정 || isMotionOff()` 로 확장했다 (토글 시 타이머도 즉시 멈추고/재개된다).
+        같은 이유로 Web Animations API(`element.animate`)를 쓰는 코드도 CSS 로는 안 잡히니,
+        나중에 `js/fly-to-cart.js` 를 다시 배선하면 거기서도 `isMotionOff()` 를 확인해야 한다.
 - [x] **메뉴 상세 연관 메뉴 추천 (크로스셀)** — `menus/detail.{js,css}` 하단에
       "함께 즐기면 좋은 메뉴" 섹션 추가. 기존 상세 요소(이미지·담기·하트·수량)는 그대로.
       - **선별**(`relatedMenus`): `getMenusByCategory(menu.categoryId)` →
